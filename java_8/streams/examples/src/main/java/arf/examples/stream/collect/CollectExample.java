@@ -4,6 +4,7 @@ import arf.examples.stream.model.Pessoa;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CollectExample {
@@ -16,6 +17,10 @@ public class CollectExample {
 
 	public String getAllNomePessoas() {
 		return pessoaList.stream().map(Pessoa::getNome).collect(Collectors.joining(", "));
+	}
+
+	public Map<String, List<Pessoa>> getAllPessoaByNome() {
+		return pessoaList.stream().collect(Collectors.groupingBy(Pessoa::getNome));
 	}
 
 	public void setPessoaList(List<Pessoa> pessoaList) {
