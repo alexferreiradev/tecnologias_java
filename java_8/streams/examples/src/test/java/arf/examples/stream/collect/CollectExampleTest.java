@@ -25,7 +25,7 @@ public class CollectExampleTest {
 	}
 
 	@Test
-	public void getPessoa_by_nome() throws Exception {
+	public void getPessoaGroupBy_nome() throws Exception {
 		List<Pessoa> testData = new ArrayList<>();
 		createPessoasToTest(testData);
 		CollectExample collectExample = new CollectExample();
