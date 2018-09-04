@@ -1,7 +1,8 @@
 *Exemplos simples com streams*
 
-* exemplo 1: map e collect com joining
-* exemplo 2: 
-* exemplo 3
-* exemplo 4
-* exemplo 5
+1. exemplo: map e collect com joining
+1. exemplo: filter, noneOfMatcha, findFirst, distinct, sorted, anyMatch
+1. exemplo: flatMap
+1. exemplo: min, max, average, limit, skip 
+1. exemplo: peek, 
+1. exemplo 5
