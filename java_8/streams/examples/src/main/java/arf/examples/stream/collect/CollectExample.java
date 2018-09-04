@@ -20,7 +20,7 @@ public class CollectExample {
 	}
 
 	public Map<String, List<Pessoa>> getAllPessoaByNome() {
-		return pessoaList.stream().collect(Collectors.groupingBy(Pessoa::getNome));
+		return
 	}
 
 	public void setPessoaList(List<Pessoa> pessoaList) {

@@ -6,10 +6,11 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
-public class CollectExampleTest {
+public class Example1Test {
 
 	@Test
 	public void getPessoasByFirstName() throws Exception {
@@ -28,10 +29,8 @@ public class CollectExampleTest {
 	public void getPessoaGroupBy_nome() throws Exception {
 		List<Pessoa> testData = new ArrayList<>();
 		createPessoasToTest(testData);
-		CollectExample collectExample = new CollectExample();
-		collectExample.setPessoaList(testData);
 
-		Map<String, List<Pessoa>> allPessoaByNome = collectExample.getAllPessoaByNome();
+		Map<String, List<Pessoa>> allPessoaByNome = testData.stream().collect(Collectors.groupingBy(Pessoa::getNome));
 
 		assertNotNull(allPessoaByNome);
 		assertEquals("{Alex=[Pessoa{id='null', nome='Alex', sobrenome='null'}], Teste 2=[Pessoa{id='null', nome='Teste 2', sobrenome='null'}], Teste=[Pessoa{id='null', nome='Teste', sobrenome='null'}, Pessoa{id='null', nome='Teste', sobrenome='null'}]}", allPessoaByNome.toString());
