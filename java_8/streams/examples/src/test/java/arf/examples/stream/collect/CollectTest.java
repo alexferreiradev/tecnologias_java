@@ -10,23 +10,21 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
-public class Example1Test {
+public class CollectTest {
 
 	@Test
-	public void getPessoasByFirstName() throws Exception {
+	public void test_map_join() throws Exception {
 		List<Pessoa> testData = new ArrayList<>();
 		createPessoasToTest(testData);
-		CollectExample collectExample = new CollectExample();
-		collectExample.setPessoaList(testData);
 
-		String pessoasByFirstName = collectExample.getAllNomePessoas();
+		String pessoasByFirstName = testData.stream().map(Pessoa::getNome).collect(Collectors.joining(", "));
 
 		assertNotNull(pessoasByFirstName);
-		assertEquals("Alex, Teste, Teste 2", pessoasByFirstName);
+		assertEquals("Alex, Teste, Teste, Teste 2", pessoasByFirstName);
 	}
 
 	@Test
-	public void getPessoaGroupBy_nome() throws Exception {
+	public void test_collect_groupingBy() throws Exception {
 		List<Pessoa> testData = new ArrayList<>();
 		createPessoasToTest(testData);
 
@@ -38,6 +36,7 @@ public class Example1Test {
 
 	private void createPessoasToTest(List<Pessoa> testData) {
 		Pessoa pessoa = new Pessoa();
+
 		pessoa.setNome("Alex");
 		testData.add(pessoa);
 		pessoa = new Pessoa();
