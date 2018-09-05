@@ -11,10 +11,20 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
-public class Example1Test {
+public class CollectTest {
+	@Test
+	public void test_collectors() throws Exception {
+		Stream<String> testData = Stream.of("Nome 1", "Nome 2", "Test 1", "Test 2");
+
+		List<String> nameList = testData.collect(Collectors.toList());
+		Map<String, List<String>> namesByFirstLetter = testData.collect(Collectors.toMap(o -> o.substring(0, 1), Collectors.toList()));
+		String pessoasByFirstName = testData.collect(Collectors.joining(","));
+
+		assertNotNull(pessoasByFirstName);
+	}
 
 	@Test
-	public void getPessoasByFirstName() throws Exception {
+	public void test_map_join() throws Exception {
 		List<Pessoa> testData = new ArrayList<>();
 		createPessoasToTest(testData);
 
