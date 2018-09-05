@@ -1,4 +1,4 @@
-package arf.examples.stream.collect;
+package arf.examples.stream;
 
 import arf.examples.stream.model.Pessoa;
 import org.junit.Test;
@@ -7,10 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
 public class CollectTest {
+	@Test
+	public void test_collectors() throws Exception {
+		Stream<String> testData = Stream.of("Nome 1", "Nome 2", "Test 1", "Test 2");
+
+		List<String> nameList = testData.collect(Collectors.toList());
+		Map<String, List<String>> namesByFirstLetter = testData.collect(Collectors.toMap(o -> o.substring(0, 1), Collectors.toList()));
+		String pessoasByFirstName = testData.collect(Collectors.joining(","));
+
+		assertNotNull(pessoasByFirstName);
+	}
 
 	@Test
 	public void test_map_join() throws Exception {
