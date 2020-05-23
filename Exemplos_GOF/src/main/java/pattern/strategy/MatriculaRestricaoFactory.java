@@ -1,8 +1,8 @@
 package pattern.strategy;
 
-import pattern.strategy.annotation.FactoryConfig;
 import pattern.strategy.creator.RestricaoCreator;
 import pattern.strategy.creator.StatusCreator;
+import pattern.strategy.annotation.FactoryConfig;
 import pattern.strategy.creator.TurmaInvalidaCreator;
 
 import java.util.Arrays;

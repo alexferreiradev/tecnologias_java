@@ -3,12 +3,13 @@ package pattern.strategy.creator;
 import common.model.Matricula;
 import common.model.Restricao;
 import common.model.builder.RestricaoBuilder;
+import pattern.strategy.MatriculaRestricaoFactory;
 
 import java.util.Objects;
 
 
 /**
- * Utilize a factory {@link pattern.strategy.MatriculaRestricaoFactory}
+ * Utilize a factory {@link MatriculaRestricaoFactory}
  */
 public class TurmaInvalidaCreator implements RestricaoCreator {
 

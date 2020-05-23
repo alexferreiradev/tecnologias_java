@@ -1,6 +1,6 @@
-package pattern.strategy.visitor.model;
+package pattern.visitor.model;
 
-import pattern.strategy.visitor.CarElementVisitor;
+import pattern.visitor.CarElementVisitor;
 
 public class CarBody implements CarElement {
 	@Override
