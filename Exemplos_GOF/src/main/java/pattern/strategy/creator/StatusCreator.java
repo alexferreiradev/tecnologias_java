@@ -4,9 +4,10 @@ import common.model.Matricula;
 import common.model.Restricao;
 import common.model.RestricaoData;
 import common.model.builder.RestricaoBuilder;
+import pattern.strategy.MatriculaRestricaoFactory;
 
 /**
- * Utilize a factory {@link pattern.strategy.MatriculaRestricaoFactory}
+ * Utilize a factory {@link MatriculaRestricaoFactory}
  */
 public final class StatusCreator implements RestricaoCreator {
 

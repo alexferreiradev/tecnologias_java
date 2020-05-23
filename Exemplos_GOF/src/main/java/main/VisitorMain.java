@@ -1,8 +1,8 @@
 package main;
 
-import pattern.strategy.visitor.CarDesignVisitor;
-import pattern.strategy.visitor.CarElementPrintVisitor;
-import pattern.strategy.visitor.model.Car;
+import pattern.visitor.CarDesignVisitor;
+import pattern.visitor.CarElementPrintVisitor;
+import pattern.visitor.model.Car;
 
 public class VisitorMain {
 
