@@ -13,8 +13,21 @@ repositories {
 }
 
 dependencies {
+	def mapstructVersion = "1.4.2.Final"
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+	testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+compileJava {
+	options.compilerArgs += [
+	        '-Amapstruct.defaultComponentModel=spring'
+	]
 }
 
 test {
