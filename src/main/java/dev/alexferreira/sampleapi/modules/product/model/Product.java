@@ -1,10 +1,19 @@
 package dev.alexferreira.sampleapi.modules.product.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Objects;
 
+@Entity
 public class Product {
 
+	@Id
+	@GeneratedValue
 	private Long id;
+
+	@Column
 	private String name;
 
 	public Long getId() {
