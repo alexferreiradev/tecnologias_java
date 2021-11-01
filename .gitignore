@@ -29,3 +29,6 @@
 **/*.jks
 
 # ignore nos submodules
+
+# Ignore spring tutos
+Spring/sample-event-arch/exemplos-site-spring/**
