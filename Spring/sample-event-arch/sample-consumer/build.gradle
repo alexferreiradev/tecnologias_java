@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.5.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'idea'
 }
 
 group = 'dev.alexferreira'
@@ -24,4 +25,48 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+sourceSets {
+    intTest {
+		java {
+			compileClasspath += sourceSets.main.output + sourceSets.test.output
+			runtimeClasspath += sourceSets.main.output + sourceSets.test.output
+			srcDir 'src/integration-test/java'
+		}
+		resources {
+			srcDir 'src/integration-test/resources'
+		}
+    }
+}
+
+configurations {
+    intTestImplementation.extendsFrom implementation
+    intTestImplementation.extendsFrom testImplementation
+    intTestRuntimeOnly.extendsFrom runtimeOnly
+    intTestRuntimeOnly.extendsFrom testRuntimeOnly
+
+	// Necessario para plugin idea
+	intTestImplementation.canBeResolved true
+}
+
+tasks.register('integrationTest', Test) {
+	description = 'Runs integration tests.'
+	group = 'verification'
+
+	testClassesDirs = sourceSets.intTest.output.classesDirs
+	classpath = sourceSets.intTest.runtimeClasspath
+	useJUnitPlatform()
+	shouldRunAfter test
+}
+
+// Ative para CI, mas não para dev, pois são testes lentos e dependentes de infra local
+//check.dependsOn integrationTest
+
+idea {
+	module {
+		testSourceDirs += sourceSets.intTest.java.srcDirs
+		testResourceDirs += sourceSets.intTest.resources.srcDirs
+		scopes.TEST.plus += [configurations.intTestImplementation ]
+	}
 }
