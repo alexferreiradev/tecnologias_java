@@ -3,12 +3,14 @@ package dev.alexferreira.sampleconsumer.module.certificate.service;
 import dev.alexferreira.sampleconsumer.model.CertificateCreationDescriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileWriter;
 
 @Service
+@Profile({"dev", "prod"})
 public class CertificateCreatorServiceImpl implements CertificateCreatorService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CertificateCreatorServiceImpl.class);
