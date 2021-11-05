@@ -1,13 +1,16 @@
 package dev.alexferreira.sampleconsumer.module.certificate.service;
 
 import dev.alexferreira.sampleconsumer.model.CertificateCreationDescriber;
+import dev.alexferreira.sampleconsumer.module.certificate.command.CertificatorGeneratorCommand;
+import dev.alexferreira.sampleconsumer.module.certificate.model.Certificate;
+import dev.alexferreira.sampleconsumer.module.certificate.service.exporter.CertificateExporter;
+import dev.alexferreira.sampleconsumer.module.certificate.service.generator.CertificateGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileWriter;
 
 @Service
 @Profile({"dev", "prod"})
@@ -15,25 +18,20 @@ public class CertificateCreatorServiceImpl implements CertificateCreatorService 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CertificateCreatorServiceImpl.class);
 
-    @Override
-    public void createPDF(CertificateCreationDescriber describer) throws Exception {
-        LOGGER.info("Criando certificado para: {}", describer.user.name);
-        File teste = File.createTempFile("teste", ".txt");
+    private final CertificateGenerator certificateGenerator;
+    private final CertificateExporter certificateExporter;
 
-        int F = 0;     // atual
-        int ant = 0;   // anterior
-        for (int i = 1; i <= 5_000_000; i++) {
-            if (i == 1) {
-                F = 1;
-                ant = 0;
-            } else {
-                F += ant;
-                ant = F - ant;
-            }
-            FileWriter fileWriter = new FileWriter(teste, true);
-            fileWriter.write(ant);
-        }
-        LOGGER.info("File criado: {} ", teste.getAbsoluteFile());
-        LOGGER.info("Certificado Criado: " + ant);
+    public CertificateCreatorServiceImpl(CertificateGenerator certificateGenerator, CertificateExporter certificateExporter) {
+        this.certificateGenerator = certificateGenerator;
+        this.certificateExporter = certificateExporter;
+    }
+
+    @Override
+    public void createPDF(CertificateCreationDescriber describer) {
+        LOGGER.info("Criando certificado para: {}", describer.user.name);
+        CertificatorGeneratorCommand command = new CertificatorGeneratorCommand();
+        Certificate certificate = certificateGenerator.generateCertificate(describer.createParticipant(), command);
+        File pdfFile = certificateExporter.export(certificate);
+        LOGGER.info("Certificado criado e exportado em arquivo: {} com {} bytes ", pdfFile.getAbsolutePath(), certificate.getFileContent().length);
     }
 }
