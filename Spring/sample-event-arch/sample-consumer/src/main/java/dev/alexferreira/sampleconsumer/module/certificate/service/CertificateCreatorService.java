@@ -5,7 +5,5 @@ import dev.alexferreira.sampleconsumer.model.CertificateCreationDescriber;
 import java.io.IOException;
 
 public interface CertificateCreatorService {
-    void createPDF(CertificateCreationDescriber describer) throws IOException, Exception;
-
-    void sendPDF(CertificateCreationDescriber describer);
+    void createPDF(CertificateCreationDescriber describer);
 }

@@ -41,16 +41,10 @@ public class SampleConsumerApplication {
 		LOGGER.info("Certificado criado para: {}", describer.eventDescriber.name);
 	}
 
-	@KafkaListener(topics = TopicsNames.CERTIFICATE, id = CERTIFICATE_SENDER_CONSUMER_GROUP_ID)
-	public void sendPDFOfCertificate(CertificateCreationDescriber describer) {
-		LOGGER.info("Iniciando o envio de mail de PDF de certificado: {}", describer.eventDescriber.name);
-		certificateCreatorService.sendPDF(describer);
-	}
-
-	@Bean
-	public RecordMessageConverter converter() {
-		return new JsonMessageConverter();
-	}
+    @Bean
+    public RecordMessageConverter converter() {
+        return new JsonMessageConverter();
+    }
 
 	@Bean
 	public NewTopic createTopic() {

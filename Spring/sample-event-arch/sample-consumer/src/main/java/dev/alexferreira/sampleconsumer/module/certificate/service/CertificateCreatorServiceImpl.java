@@ -36,14 +36,4 @@ public class CertificateCreatorServiceImpl implements CertificateCreatorService 
         LOGGER.info("File criado: {} ", teste.getAbsoluteFile());
         LOGGER.info("Certificado Criado: " + ant);
     }
-
-    @Override
-    public void sendPDF(CertificateCreationDescriber describer) {
-        LOGGER.info("Enviando certificado para: {}", describer.user.name);
-        int acc = 1;
-//        for (int i = 1; i < 1000; i++) {
-//            acc *= i;
-//        }
-        LOGGER.info("Certificado Enviado: " + acc);
-    }
 }
