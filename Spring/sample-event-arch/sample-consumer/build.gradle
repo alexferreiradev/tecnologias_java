@@ -18,6 +18,9 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.0'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+	implementation 'com.itextpdf:itextpdf:5.5.13'
+	implementation 'commons-io:commons-io:2.6'
+	implementation 'commons-codec:commons-codec:1.12'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
