@@ -52,6 +52,7 @@ Irá criar todos containers necessários para executar os serviços descritos, n
 Uma observação, o compose implementado, está com o banco sem volume fixo, ele recria o banco toda vez que inicializa outro container
 
 **Debug deploy**
+
 Utilize os camandos abaixo para verificar os erros:
 - compose logs <nome-servico>: mostra os ultimos logs da aplicação no container
 - compose down: remove todos serviços
