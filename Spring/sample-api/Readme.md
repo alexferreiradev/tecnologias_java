@@ -24,7 +24,33 @@ Execute o banco de dados, a api e teste com o `Insomnia`. Execute a API com `gra
 ## Build
 Execute `gradle bootJarMainClassName`. Será gerado a pasta target|build. Execute como um Jar normal
 
+## Deploy Cloud Native
+Este projeto contém arquivos para facilitar no deploy em ambientes cloud. Existe o arquivo `Dockerfile` que descreve como cria uma imagem para containers docker da API. Existe o arquivo `docker-compose.yml` que descreve como criar um ambiente com containers para serviço de api e todas dependencias da api, no cenário simples, o banco de dados.
+
+**Ambiente testado**
+
+- Docker: 20.10.10
+- Docker-compose: 1.29.2
+- postgres: 14
+
+**Variáveis de ambiente**
+
+O banco pode ser configurado com a criação de uma arquivo `.env` contendo:
+```shell
+PG_PASS=senhaparausuario
+```
+
+**Deploy**
+
+Execute o seguite comando:
+```shell
+cd dir_of_project
+sudo docker-compose up -d
+```
+Irá criar todos containers necessários para executar os serviços descritos, no nosso caso a api de produtos com o banco. O `-d` é uma configuração para indicar que queremos rodar os containers de forma detached, ou seja, em background, não importando com logs em foreground.
+
+
 [http Basic]: https://github.com/alexferreiradev/tecnologias_java/tree/spring/Spring
-[OAuth - branch separada]: https://github.com/alexferreiradev/tecnologias_java/tree/spring/Spring
-[JWT - branch separada]: https://github.com/alexferreiradev/tecnologias_java/tree/spring/Spring
-[OICD - branch separada]: https://github.com/alexferreiradev/tecnologias_java/tree/spring/Spring
+[OAuth - branch separada]: https://github.com/alexferreiradev/tecnologias_java/tree/spring_oauth/Spring
+[JWT - branch separada]: https://github.com/alexferreiradev/tecnologias_java/tree/spring_jwt/Spring
+[OICD - branch separada]: https://github.com/alexferreiradev/tecnologias_java/tree/spring_oicd/Spring
