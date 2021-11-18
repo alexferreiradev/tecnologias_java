@@ -72,6 +72,30 @@ Utilize os camandos abaixo para verificar os erros:
 
 Mais informações sobre docker-compose em [documentação oficial](https://docs.docker.com/compose/).
 
+## Deploy no Kubernates (K8S)
+Foi criado o arquivo `deployments.yaml` para criar um ambiente no k8s com todas dependencias e um HPA para validar testes de stress.
+
+**Ambiente testado**
+
+- Docker: 20.10.10
+- Docker-compose: 1.29.2
+- postgres: 14
+- mongo: 5.0.4
+- Kind: v0.11.1 go1.16.4 linux/amd64
+- K8s: v1.21.1
+
+O K8s utiliza um registry cadastrado no cluster, ao criar o cluster com o Kind, você deve subir suas imagens para o registry com o comando: `kind load docker-image <nome-da-imagem-no-seu-docker-local> <nome-imagem-no-registry>`.
+
+Com a imagem no registry, execute `kubectl apply -f deployments.yaml` para criar o ambiente no K8s. Lembrando que para produção, deverá alterar para utilizar um `ConfigMap` com os dados de usuarios e senhas dos bancos.
+
+**Debug de ambiente**
+- kubectl get pods: lista todos pods criados
+- kubectl get hpa: lista todos hpa criados
+- kubectl delete -f <yml>: remove todos recursos descritos no yml passado
+- kubectl describe pod <nome-pod>: detalha todo o pod, e quais eventos de erro podem ter acontecido
+  
+Mais informações sobre em [documentação oficial - Kind](https://kind.sigs.k8s.io/docs/user/quick-start/#loading-an-image-into-your-cluster/), [documentação oficial - kubectl](https://kubernetes.io/docs/reference/kubectl/) e [documentação oficial - K8s](https://kubernetes.io/docs/concepts/).
+
 [http Basic]: https://github.com/alexferreiradev/tecnologias_java/tree/spring/Spring
 [OAuth - branch separada]: https://github.com/alexferreiradev/tecnologias_java/tree/spring_oauth/Spring
 [JWT - branch separada]: https://github.com/alexferreiradev/tecnologias_java/tree/spring_jwt/Spring
