@@ -1,6 +1,7 @@
 package dev.alexferreira.sampleapi.modules.product.api;
 
 import dev.alexferreira.sampleapi.modules.product.dto.ProdutoDTO;
+import dev.alexferreira.sampleapi.modules.product.model.ProdutoLog;
 import dev.alexferreira.sampleapi.modules.product.service.ProductService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -38,5 +41,12 @@ public class ProductApi {
 		logger.debug("registerProduct was requested with {}", dto);
 
 		service.saveProduct(dto);
+	}
+
+	@GetMapping("/logs")
+	public List<ProdutoLog> getLogs() {
+		logger.debug("getAllLogs was requested");
+
+		return service.getAllLogs();
 	}
 }
