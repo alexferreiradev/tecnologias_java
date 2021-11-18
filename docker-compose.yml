@@ -1,3 +1,5 @@
+# Este arquivo depende de variáveis de ambiente ou um arquivo .env criado, leia o README do projeto.
+
 version: "3.9"
 networks:
   db-net:
