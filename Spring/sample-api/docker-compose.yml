@@ -1,3 +1,5 @@
+# Este arquivo depende de variáveis de ambiente ou um arquivo .env criado, leia o README do projeto.
+
 version: "3.9"
 networks:
   db-net:
@@ -9,12 +11,14 @@ services:
     build: .
     environment:
       DB_HOST: "db"
+      MONGO_HOST: "nosql-db"
     ports:
       - "80:8080"
     networks:
       - db-net
     depends_on:
       - db
+      - nosql-db
     image: 'produto-api:${TAG:-latest}'
   db:
     image: postgres
@@ -24,5 +28,23 @@ services:
       POSTGRES_DB: 'sample-api'
     networks:
       - db-net
+  nosql-db:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS:?err}
+    networks:
+      - db-net
+  mongo-express:
+    image: mongo-express
+    restart: always
+    depends_on:
+      - nosql-db
     ports:
-      - "5432:5432"
+      - 8081:8081
+    networks:
+      - db-net
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASS:?err}
+      ME_CONFIG_MONGODB_URL: mongodb://root:${MONGO_PASS:?err}@nosql-db:27017/

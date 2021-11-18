@@ -1,0 +1,42 @@
+# Somente para Dev criar ambiente de bancos facilmente. Use o docker-compose para prod ou staging.
+
+version: "3.9"
+networks:
+  db-net:
+    external: true
+    driver: "bridge"
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: 'sample-api'
+    networks:
+      - db-net
+    ports:
+      - "5432:5432"
+  nosql-db:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongo
+      MONGO_INITDB_DATABASE: "api"
+    ports:
+      - 27017:27017
+    networks:
+      - db-net
+  mongo-express:
+    image: mongo-express
+    restart: always
+    depends_on:
+      - nosql-db
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mongo
+      ME_CONFIG_MONGODB_URL: mongodb://root:mongo@nosql-db:27017
+    networks:
+      - db-net

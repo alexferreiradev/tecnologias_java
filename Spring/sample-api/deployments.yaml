@@ -1,0 +1,149 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  template:
+    metadata:
+      name: produto-api
+      labels:
+        app: produto-api
+    spec:
+      containers:
+        - name: produto-api
+          image: produto-api
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "1Gi"
+            requests:
+              cpu: "100m"
+              memory: "800Mi"
+          env:
+            - name: DB_PASS
+              value: postgres
+            - name: DB_HOST
+              value: product-db
+            - name: MONGO_HOST
+              value: product-nosql
+            - name: MONGO_PASS
+              value: mongo
+  replicas: 2
+  selector:
+    matchLabels:
+      app: produto-api
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+spec:
+  template:
+    metadata:
+      name: database
+      labels:
+        app: database
+    spec:
+      containers:
+      - name: 'produto-db'
+        image: postgres
+        env:
+          - name: "POSTGRES_USER"
+            value: postgres
+          - name: "POSTGRES_PASSWORD"
+            value: 'postgres'
+          - name: "POSTGRES_DB"
+            value: 'sample-api'
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nosql-db
+spec:
+  template:
+    metadata:
+      name: nosql-db
+      labels:
+        app: nosql-db
+    spec:
+      containers:
+      - name: 'nosql-db'
+        image: mongo
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: root
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            value: mongo
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nosql-db
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-db
+spec:
+  selector:
+    app: database
+  ports:
+    - port: 5432
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-nosql
+spec:
+  selector:
+    app: nosql-db
+  ports:
+    - port: 27017
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-api
+spec:
+  selector:
+    app: produto-api
+  type: LoadBalancer
+  ports:
+      - port: 8080
+        nodePort: 30001
+
+---
+
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: product-api-hpa
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: api
+    apiVersion: apps/v1
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 40
