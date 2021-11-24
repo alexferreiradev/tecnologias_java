@@ -8,7 +8,12 @@ networks:
 
 services:
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: "0.0.1-SNAPSHOT"
+      target: runnerComCache
     environment:
       DB_HOST: "db"
       MONGO_HOST: "nosql-db"
