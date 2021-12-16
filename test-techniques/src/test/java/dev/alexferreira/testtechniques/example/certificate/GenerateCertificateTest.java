@@ -8,27 +8,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(EasyMockExtension.class)
-class GenerateCertificateTest {
-
-    private final EasyMockSupport support = new EasyMockSupport();
+class GenerateCertificateTest extends EasyMockSupport {
 
     @Mock
     private ExportService exportService;
 
-//    private GenerateCertificate generateCertificate;
-
-    @TestSubject
+    @TestSubject()
     private GenerateCertificate generateCertificate = new GenerateCertificate(null);
 
     @Test
     void generateCertificate() {
-        Certificate certificate = new Certificate();
-        exportService.exportJsonFile(EasyMock.anyObject(Certificate.class));
-        support.replayAll();
+        exportService.exportPDFFile(EasyMock.anyObject(Certificate.class));
+        replayAll();
 
         CertificateData certificateData = new CertificateData();
         generateCertificate.generateCertificate(certificateData);
 
-        support.verifyAll();
+        verifyAll();
     }
 }

@@ -13,7 +13,6 @@ public class GenerateCertificate {
     }
 
     public void generateCertificate(CertificateData certificateData) {
-
         exportService.exportPDFFile(Certificate.from(certificateData));
     }
 }
