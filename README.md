@@ -6,6 +6,7 @@ As tecnologias foram testadas em branches separadas e cada uma tem outras branch
 * [Spring - branch separada](https://github.com/alexferreiradev/tecnologias_java/tree/sample-api/Spring)
 * [Quarkus - branch separada](https://github.com/alexferreiradev/tecnologias_java/tree/maven/Maven/Plugins/code-with-quarkus)
 * [Kafka - branch separada](https://github.com/alexferreiradev/tecnologias_java/tree/sample-event-arch/Spring/sample-event-arch)
+* [Regex-Java](https://github.com/alexferreiradev/tecnologias_java/tree/master/regex/regex-java)
 
 ## Versões utilizadas
 Foram utilizadas outras versões, mas cada uma ficou em branches separadas. Troque de branch para poder ver outras versões.
