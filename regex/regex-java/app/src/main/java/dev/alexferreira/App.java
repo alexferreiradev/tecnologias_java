@@ -4,11 +4,24 @@
 package dev.alexferreira;
 
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+
+    private static JavaRegex javaRegex = new JavaRegex();
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        System.out.println("Exemplo de regex com Java");
+
+        boolean matchesNumber = javaRegex.matches("alex123", "\\d");
+        boolean matchesWord = javaRegex.matches("alex123", "\\w");
+        boolean findNumber = javaRegex.find("alex123", "\\d") != null;
+        boolean findWord = javaRegex.find("alex123", "\\w") != null;
+        boolean findGroups = javaRegex.findAll("alex123", "(\\d)(\\w)").size() > 0;
+        String groups = String.join(",", javaRegex.findAll("alex123", "(\\d)(\\w)"));
+
+        System.out.printf("matches number = %s\n", matchesNumber);
+        System.out.printf("matches matchesWord = %s\n", matchesWord);
+        System.out.printf("matches findNumber = %s\n", findNumber);
+        System.out.printf("matches findWord = %s\n", findWord);
+        System.out.printf("matches findGroups = %s\n", findGroups);
+        System.out.printf("findGroups = %s\n", groups);
     }
 }
