@@ -1,15 +1,6 @@
 # Projeto
 Exemplo de API básica com diversas funções implementadas com `Spring`.
 
-## Spring security
-A parte de segurança da API foi desenvolvida utilizando o `Spring security`. Foi criado uma tabela para Usuários e roles no postgres e as permissões para cada rota da api foram definidas no bean de configuração. O modo de autenticação utilizado foi:  
-* [http Basic]
-* [OAuth - branch separada]
-* [JWT - branch separada]
-* [OICD - branch separada]
-
-O modo implementado de http Basic utiliza as credenciais cadastradas no arquivo property.
-
 ## Dev
 O ambiente de dev para executar deve conter:
 * Java 11
@@ -95,8 +86,3 @@ Com a imagem no registry, execute `kubectl apply -f deployments.yaml` para criar
 - kubectl describe pod <nome-pod>: detalha todo o pod, e quais eventos de erro podem ter acontecido
   
 Mais informações sobre em [documentação oficial - Kind](https://kind.sigs.k8s.io/docs/user/quick-start/#loading-an-image-into-your-cluster/), [documentação oficial - kubectl](https://kubernetes.io/docs/reference/kubectl/) e [documentação oficial - K8s](https://kubernetes.io/docs/concepts/).
-
-[http Basic]: https://github.com/alexferreiradev/tecnologias_java/tree/spring/Spring
-[OAuth - branch separada]: https://github.com/alexferreiradev/tecnologias_java/tree/spring_oauth/Spring
-[JWT - branch separada]: https://github.com/alexferreiradev/tecnologias_java/tree/spring_jwt/Spring
-[OICD - branch separada]: https://github.com/alexferreiradev/tecnologias_java/tree/spring_oicd/Spring
