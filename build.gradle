@@ -29,6 +29,8 @@ dependencies {
 	testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.testcontainers:testcontainers:1.17.4'
+	testImplementation 'org.testcontainers:postgresql:1.17.4'
 }
 
 compileJava {
