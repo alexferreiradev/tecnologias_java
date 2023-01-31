@@ -1,4 +1,4 @@
 public interface ProdutoExporter {
 
-   public String export(String produto);
+   public String exportProduto(String produto);
 }

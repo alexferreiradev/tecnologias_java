@@ -1,6 +1,4 @@
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.*;
-import org.junit.jupiter.api.function.*;
 import org.mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PdfExporterTest {
 
    @Mock
-   ProdutoExporterImpl produtoExporter;
+   ProdutoExporter produtoCreator;
 
    @InjectMocks
    PdfExporter pdfExporter;
@@ -19,46 +17,46 @@ class PdfExporterTest {
    }
 
    @AfterEach void tearDown() {
-      Mockito.verifyNoMoreInteractions(produtoExporter);
+      Mockito.verifyNoMoreInteractions(produtoCreator);
    }
 
-   @Test void deveRetornarPDFValid_whenCallExport() {
+   @Test void deveRetornarPDFValid_QuandoChamarExportComParametroValido() {
       String produto = "valid produto";
-      String validProdutoExportado = "valid produto";
-      Mockito.when(produtoExporter.export(produto)).thenReturn(validProdutoExportado);
+      String pdfValido = "pdf valido";
+      Mockito.when(produtoCreator.exportProduto(produto)).thenReturn(pdfValido);
 
-      String export = pdfExporter.export(produto);
+      String export = pdfExporter.createPDF(produto);
 
-      Assertions.assertEquals(validProdutoExportado, export);
+      Assertions.assertEquals(pdfValido, export);
 
-      Mockito.verify(produtoExporter).export(Mockito.eq(produto));
+      Mockito.verify(produtoCreator).exportProduto(Mockito.eq(produto));
    }
 
    @Test void deveRetornarPDFInvalido_whenProdutoExporterReturnInvalidTexto() {
       String produto = "valid produto";
       String invalidProdutoExportado = "invalid produto";
-      Mockito.when(produtoExporter.export(produto)).thenReturn(invalidProdutoExportado);
+      Mockito.when(produtoCreator.exportProduto(produto)).thenReturn(invalidProdutoExportado);
 
-      String export = pdfExporter.export(produto);
+      String export = pdfExporter.createPDF(produto);
 
       Assertions.assertEquals(invalidProdutoExportado, export);
    }
 
    @Test void deveRetornarErro_whenProdutoExporterLancarErro() {
       String produto = "valid produto";
-      Mockito.when(produtoExporter.export(produto)).thenThrow(new IllegalArgumentException("invalid product"));
+      Mockito.when(produtoCreator.exportProduto(produto)).thenThrow(new IllegalArgumentException("invalid product"));
 
       IllegalArgumentException exception =
-         assertThrows(IllegalArgumentException.class, () -> pdfExporter.export(produto));
+         assertThrows(IllegalArgumentException.class, () -> pdfExporter.createPDF(produto));
 
       Assertions.assertEquals("invalid product", exception.getMessage());
    }
 
-   @Test void deveRetornarErro_whenProdutoSejaVazio() {
+   @Test void deveRetornarErro_quandoProdutoSejaVazio() {
       String produto = "";
 
       IllegalArgumentException exception =
-         assertThrows(IllegalArgumentException.class, () -> pdfExporter.export(produto));
+         assertThrows(IllegalArgumentException.class, () -> pdfExporter.createPDF(produto));
 
       Assertions.assertEquals("produto vazio invalido", exception.getMessage());
    }

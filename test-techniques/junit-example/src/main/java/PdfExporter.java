@@ -2,15 +2,15 @@ public class PdfExporter implements Exporter {
 
    private final ProdutoExporter produtoExporter;
 
-   public PdfExporter(ProdutoExporterImpl produtoExporter) {
+   public PdfExporter(ProdutoExporter produtoExporter) {
       this.produtoExporter = produtoExporter;
    }
 
-   @Override public String export(String text) {
-      if (text.isEmpty()) {
+   @Override public String createPDF(String text) {
+      if (text.isBlank()) {
          throw new IllegalArgumentException("produto vazio invalido");
       }
 
-      return produtoExporter.export(text);
+      return produtoExporter.exportProduto(text);
    }
 }

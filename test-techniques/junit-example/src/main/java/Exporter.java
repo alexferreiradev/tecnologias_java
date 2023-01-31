@@ -1,5 +1,5 @@
 public interface Exporter {
 
-   public String export(String text);
+   public String createPDF(String text);
    
 }
