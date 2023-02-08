@@ -3,7 +3,7 @@
 version: "3.9"
 networks:
   db-net:
-    external: true
+    external: false
     driver: "bridge"
 
 services:
