@@ -1,11 +1,7 @@
-# Este arquivo depende de variáveis de ambiente ou um arquivo .env criado, leia o README do projeto.
-
 version: "3.9"
 networks:
-  db-net:
-    external: true
-    driver: "bridge"
-
+  db-net: {}
+name: "sample-api-2"
 services:
   api:
     build:
@@ -18,7 +14,7 @@ services:
       DB_HOST: "db"
       MONGO_HOST: "nosql-db"
     ports:
-      - "80:8080"
+      - "8080:8080"
     networks:
       - db-net
     depends_on:
@@ -27,18 +23,22 @@ services:
     image: 'produto-api:${TAG:-latest}'
   db:
     image: postgres
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: ${PG_PASS:?err}
+      POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'sample-api'
-    command: ["postgres", "-c max_connections=5000", "-c shared_buffers=256MB"]
+    command: ["postgres", "-c", "shared_buffers=256MB", "-c", "max_connections=500"]
     networks:
       - db-net
   nosql-db:
     image: mongo
+    ports:
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS:?err}
+      MONGO_INITDB_ROOT_PASSWORD: root
     networks:
       - db-net
   mongo-express:
@@ -52,5 +52,5 @@ services:
       - db-net
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASS:?err}
-      ME_CONFIG_MONGODB_URL: mongodb://root:${MONGO_PASS:?err}@nosql-db:27017/
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_URL: mongodb://root:root@nosql-db:27017/
