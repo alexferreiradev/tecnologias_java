@@ -1,5 +1,8 @@
 ####### Android output
 # Built application files
+gradlew
+gradlew.bat
+!src/
 **/*.apk
 **/*.ap_
 # Files for the ART/Dalvik VM
