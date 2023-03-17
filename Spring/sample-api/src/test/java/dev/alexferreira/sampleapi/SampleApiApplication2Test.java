@@ -4,7 +4,7 @@ import dev.alexferreira.sampleapi.test.util.*;
 import org.junit.jupiter.api.*;
 import org.springframework.test.util.*;
 
-class SampleApiApplicationTest extends IntegrationTest {
+class SampleApiApplication2Test extends IntegrationTest {
 
    @Test
    void main() {
