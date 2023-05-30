@@ -2,11 +2,13 @@ package dev.alexferreira.sampleapi.test.util;
 
 import dev.alexferreira.sampleapi.test.container.*;
 import dev.alexferreira.sampleapi.test.spring.*;
-import org.springframework.boot.test.context.*;
+import org.springframework.boot.autoconfigure.data.jpa.*;
+import org.springframework.boot.test.autoconfigure.data.mongo.*;
 import org.springframework.test.context.*;
 
-@SpringBootTest
 @ActiveProfiles("test")
+@DataMongoTest
+@ContextConfiguration(classes = JpaRepositoriesAutoConfiguration.class, initializers = Initializer.class)
 public abstract class IntegrationTest {
 
    private static final Initializer.Configurator configurator = new PostgresContainer();
