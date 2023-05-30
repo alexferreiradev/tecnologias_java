@@ -1,35 +1,33 @@
 package dev.alexferreira.sampleapi;
 
+import dev.alexferreira.sampleapi.modules.product.repository.*;
 import dev.alexferreira.sampleapi.test.util.*;
 import org.junit.jupiter.api.*;
-import org.springframework.test.util.*;
+import org.springframework.beans.factory.annotation.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class SampleApiApplicationTest extends IntegrationTest {
 
+   @Value("${spring.profiles.active}") String property;
+
+   @Autowired ProductRepository productRepository;
+
+   @Autowired ProdutoLogRepository logRepository;
+
    @Test
-   void main() {
-      // todo add test some property
-      // todo add test some dependency use, like db
-      // todo add test some configuration from spring
-      // todo add docker configuration
-      AssertionErrors.fail("not imp");
+   void shouldGetProperty_whenSpringContextStart() {
+      assertNotNull(property);
+      assertEquals("dev", property);
    }
 
    @Test
-   void main1() {
-      // todo add test some property
-      // todo add test some dependency use, like db
-      // todo add test some configuration from spring
-      // todo add docker configuration
-      AssertionErrors.fail("not imp");
+   void shouldInjectRepository__whenSpringContextStart() {
+      assertNotNull(productRepository);
    }
 
    @Test
-   void main2() {
-      // todo add test some property
-      // todo add test some dependency use, like db
-      // todo add test some configuration from spring
-      // todo add docker configuration
-      AssertionErrors.fail("not imp");
+   void shouldInjectNoSqlRepository__whenSpringContextStart() {
+      assertNotNull(logRepository);
    }
 }
