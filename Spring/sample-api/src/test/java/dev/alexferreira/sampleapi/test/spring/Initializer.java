@@ -8,12 +8,18 @@ import java.util.*;
 
 public class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-   private final Configurator configurator = new PostgresContainer();
+   private static final Configurator configurator = new PostgresContainer();
+   private static final Configurator noSqlConfigurator = new MongoCustomContainer();
 
    @Override
    public void initialize(ConfigurableApplicationContext applicationContext) {
       Map<String, String> newProperties = configurator.createDynamicProperties();
-      TestPropertyValues.of(newProperties).applyTo(applicationContext);
+      Map<String, String> noSqlProperties = noSqlConfigurator.createDynamicProperties();
+      Map<String, String> map = new HashMap<>();
+      map.putAll(newProperties);
+      map.putAll(noSqlProperties);
+
+      TestPropertyValues.of(map).applyTo(applicationContext);
    }
 
    public interface Configurator {

@@ -20,6 +20,12 @@ public class PostgresContainer extends PostgreSQLContainer<PostgresContainer> im
 
    @Override
    public Map<String, String> createDynamicProperties() {
-      return Map.of("spring.datasource.url", getJdbcUrl());
+      return Map.of("spring.datasource.url",
+         getJdbcUrl(),
+         "spring.datasource.username",
+         getUsername(),
+         "spring.datasource.password",
+         getPassword()
+      );
    }
 }

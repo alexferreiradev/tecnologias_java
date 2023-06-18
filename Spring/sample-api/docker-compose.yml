@@ -12,7 +12,7 @@ services:
       target: runnerComCache
     environment:
       DB_HOST: "db"
-      MONGO_HOST: "nosql-db"
+      MONGO_URI: "mongodb://root:mongo@nosql-db:27017/sample-api"
     ports:
       - "8080:8080"
     networks:
@@ -33,12 +33,12 @@ services:
     networks:
       - db-net
   nosql-db:
-    image: mongo
+    image: mongo:6.0
     ports:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_ROOT_PASSWORD: mongo
     networks:
       - db-net
   mongo-express:
@@ -52,5 +52,5 @@ services:
       - db-net
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: root
-      ME_CONFIG_MONGODB_URL: mongodb://root:root@nosql-db:27017/
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mongo
+      ME_CONFIG_MONGODB_URL: mongodb://root:mongo@nosql-db:27017/
