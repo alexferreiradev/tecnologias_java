@@ -5,6 +5,6 @@ import org.springframework.boot.test.context.*;
 import org.springframework.test.context.*;
 
 @ActiveProfiles("test")
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = Initializer.class)
 public abstract class IntegrationTest {}

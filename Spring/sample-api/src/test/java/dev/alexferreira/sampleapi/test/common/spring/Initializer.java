@@ -8,8 +8,8 @@ import java.util.*;
 
 public class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-   private Configurator configurator = new PostgresContainer();
-   private Configurator noSqlConfigurator = new MongoCustomContainer();
+   private final Configurator configurator = new PostgresContainer();
+   private final Configurator noSqlConfigurator = new MongoCustomContainer();
 
    @Override
    public void initialize(ConfigurableApplicationContext applicationContext) {
