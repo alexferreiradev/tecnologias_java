@@ -1,6 +1,6 @@
-package dev.alexferreira.sampleapi.test.util;
+package dev.alexferreira.sampleapi.test.common;
 
-import dev.alexferreira.sampleapi.test.spring.*;
+import dev.alexferreira.sampleapi.test.common.spring.*;
 import org.springframework.boot.test.context.*;
 import org.springframework.test.context.*;
 

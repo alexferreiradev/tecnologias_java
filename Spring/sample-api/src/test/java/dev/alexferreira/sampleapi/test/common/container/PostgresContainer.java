@@ -1,6 +1,6 @@
-package dev.alexferreira.sampleapi.test.container;
+package dev.alexferreira.sampleapi.test.common.container;
 
-import dev.alexferreira.sampleapi.test.spring.*;
+import dev.alexferreira.sampleapi.test.common.spring.*;
 import org.testcontainers.containers.*;
 import org.testcontainers.utility.*;
 

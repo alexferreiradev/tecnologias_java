@@ -1,6 +1,6 @@
-package dev.alexferreira.sampleapi.test.spring;
+package dev.alexferreira.sampleapi.test.common.spring;
 
-import dev.alexferreira.sampleapi.test.container.*;
+import dev.alexferreira.sampleapi.test.common.container.*;
 import org.springframework.boot.test.util.*;
 import org.springframework.context.*;
 
@@ -8,8 +8,8 @@ import java.util.*;
 
 public class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-   private static final Configurator configurator = new PostgresContainer();
-   private static final Configurator noSqlConfigurator = new MongoCustomContainer();
+   private Configurator configurator = new PostgresContainer();
+   private Configurator noSqlConfigurator = new MongoCustomContainer();
 
    @Override
    public void initialize(ConfigurableApplicationContext applicationContext) {

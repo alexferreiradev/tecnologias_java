@@ -1,7 +1,7 @@
 package dev.alexferreira.sampleapi;
 
 import dev.alexferreira.sampleapi.modules.product.repository.*;
-import dev.alexferreira.sampleapi.test.util.*;
+import dev.alexferreira.sampleapi.test.common.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.*;
 
