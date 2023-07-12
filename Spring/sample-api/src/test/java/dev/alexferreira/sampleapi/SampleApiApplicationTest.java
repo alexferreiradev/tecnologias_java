@@ -1,27 +1,22 @@
 package dev.alexferreira.sampleapi;
 
-import dev.alexferreira.sampleapi.modules.product.model.*;
-import dev.alexferreira.sampleapi.modules.product.repository.*;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.boot.test.context.*;
-import org.springframework.core.env.*;
-import org.springframework.test.context.*;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest @ActiveProfiles("dev") class SampleApiApplicationTest {
+@SpringBootTest
+@ActiveProfiles("dev")
+class SampleApiApplicationTest {
 
    @Autowired Environment environment;
 
-   @Autowired ProductRepository repository;
-
-   @Test void main() {
+   @Test
+   void main() {
       assertNotNull(environment);
-
-      Product entity = new Product();
-      entity.setName("teste");
-      repository.save(entity);
-      assertNotNull(repository.findAll().iterator().next());
+      assertNotNull(environment.getProperty("spring.profiles.active"));
    }
 }

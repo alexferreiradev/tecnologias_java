@@ -1,4 +1,4 @@
-package dev.alexferreira.sampleapi.core;
+package dev.alexferreira.sampleapi.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

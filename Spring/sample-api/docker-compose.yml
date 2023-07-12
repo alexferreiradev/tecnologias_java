@@ -3,8 +3,11 @@
 version: "3.9"
 networks:
   db-net:
-    external: true
+    external: false
     driver: "bridge"
+
+volumes:
+    db-data: {}
 
 services:
   api:
@@ -18,7 +21,7 @@ services:
       DB_HOST: "db"
       MONGO_HOST: "nosql-db"
     ports:
-      - "80:8080"
+      - "8082:8080"
     networks:
       - db-net
     depends_on:
@@ -26,19 +29,31 @@ services:
       - nosql-db
     image: 'produto-api:${TAG:-latest}'
   db:
-    image: postgres
+    image: debezium/postgres:14-alpine
     environment:
       POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: ${PG_PASS:?err}
+      POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'sample-api'
-    command: ["postgres", "-c max_connections=5000", "-c shared_buffers=256MB"]
+    ports:
+      - "5432:5432"
+    command: ["postgres"]
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres'" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     networks:
       - db-net
   nosql-db:
-    image: mongo
+    image: mongo:5.0.17
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS:?err}
+      MONGO_INITDB_ROOT_PASSWORD: mongo
+      MONGO_INITDB_DATABASE: sample-api
+    ports:
+      - "27017:27017"
     networks:
       - db-net
   mongo-express:
@@ -47,10 +62,11 @@ services:
     depends_on:
       - nosql-db
     ports:
-      - 8081:8081
+      - "8081:8081"
     networks:
       - db-net
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASS:?err}
-      ME_CONFIG_MONGODB_URL: mongodb://root:${MONGO_PASS:?err}@nosql-db:27017/
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mongo
+      ME_CONFIG_MONGODB_SERVER: nosql-db
+
