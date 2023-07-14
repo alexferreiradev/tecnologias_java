@@ -1,15 +1,23 @@
 package dev.alexferreira.sampleapi.infrastructure.kafka.base;
 
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
 
-@Component
+import java.util.concurrent.ExecutionException;
+
+@Service
 public class BaseProducer<T> {
 
-   public BaseProducer() {
-   }
+   @Autowired KafkaTemplate<String, String> kafkaTemplate;
 
    public void send(BaseProducerMessage<T> message) {
-      // TODO()
+      try {
+         kafkaTemplate.send(message.topicName, message.key, message.message.toString()).completable().get();
+      }
+      catch(InterruptedException | ExecutionException e) {
+         throw new RuntimeException(e);
+      }
    }
 
 }
