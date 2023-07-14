@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "storage.connection-string",
+      "type": "java.lang.String",
+      "description": "Description for storage.connection-string."
+    },
+    {
+      "name": "storage.container-name",
+      "type": "java.lang.String",
+      "description": "Description for storage.container-name."
+    }
+  ]
+}
