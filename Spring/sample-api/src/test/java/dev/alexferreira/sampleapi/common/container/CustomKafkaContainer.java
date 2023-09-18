@@ -13,6 +13,7 @@ public class CustomKafkaContainer extends KafkaContainer
 
    public CustomKafkaContainer() {
       super(DockerImageName.parse("confluentinc/cp-kafka:5.4.3"));
+      addEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "true");
 
       start();
    }

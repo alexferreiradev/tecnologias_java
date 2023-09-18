@@ -3,6 +3,7 @@ package dev.alexferreira.sampleapi.domain.inquilino;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -10,11 +11,12 @@ import java.util.UUID;
 public class Inquilino {
 
    @Id private UUID id = UUID.randomUUID();
-   @Column private String nome;
+   @Column(nullable = false) private String nome;
    @Column private String apartamento;
    @Column private String bloco;
-   @Column private String documento;
+   @Column(unique = true, updatable = false, nullable = false) private String documento;
    @Column private String imagePath;
+   @Column(nullable = false, updatable = false) private Instant createdAt = Instant.now();
 
    public UUID getId() {
       return id;
@@ -64,6 +66,14 @@ public class Inquilino {
       this.imagePath = imagePath;
    }
 
+   public Instant getCreatedAt() {
+      return createdAt;
+   }
+
+   public void setCreatedAt(Instant createdAt) {
+      this.createdAt = createdAt;
+   }
+
    @Override
    public boolean equals(Object o) {
       if(this == o) return true;
@@ -71,20 +81,24 @@ public class Inquilino {
       Inquilino inquilino = (Inquilino) o;
       return Objects.equals(id, inquilino.id) && Objects.equals(nome, inquilino.nome) && Objects.equals(apartamento,
          inquilino.apartamento
-      ) && Objects.equals(bloco, inquilino.bloco) && Objects.equals(
-         documento,
-         inquilino.documento
-      ) && Objects.equals(imagePath, inquilino.imagePath);
+      ) && Objects.equals(bloco, inquilino.bloco) && Objects.equals(documento, inquilino.documento) && Objects.equals(imagePath,
+         inquilino.imagePath
+      ) && Objects.equals(
+         createdAt,
+         inquilino.createdAt
+      );
    }
 
    @Override
    public int hashCode() {
-      return Objects.hash(id, nome, apartamento, bloco, documento, imagePath);
+      return Objects.hash(id, nome, apartamento, bloco, documento, imagePath, createdAt);
    }
 
    @Override
    public String toString() {
-      return "Inquilino{" + "id='" + id + '\'' + ", nome='" + nome + '\'' + ", apartamento='" + apartamento + '\''
-         + ", bloco='" + bloco + '\'' + ", documento='" + documento + '\'' + ", imagePath='" + imagePath + '\'' + '}';
+      return "Inquilino{" + "id=" + id + ", nome='" + nome + '\'' + ", apartamento='" + apartamento + '\'' + ", bloco='"
+         + bloco + '\'' + ", documento='" + documento + '\'' + ", imagePath='" + imagePath + '\'' + ", createdAt="
+         + createdAt + '}';
    }
+
 }

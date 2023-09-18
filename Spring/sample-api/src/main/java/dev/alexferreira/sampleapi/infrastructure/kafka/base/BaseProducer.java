@@ -13,7 +13,7 @@ public class BaseProducer<T> {
 
    public void send(BaseProducerMessage<T> message) {
       try {
-         kafkaTemplate.send(message.topicName, message.key, message.message.toString()).completable().get();
+         kafkaTemplate.send(message.topicName, message.key, message.message.toString()).get();
       }
       catch(InterruptedException | ExecutionException e) {
          throw new RuntimeException(e);
