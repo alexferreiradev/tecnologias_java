@@ -8,12 +8,12 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
 
-public class CustomNoSqlDataBaseContainer extends MongoDBContainer
+public class CustomNoSqlContainer extends MongoDBContainer
    implements InitializerConfigurableContainer, DynamicPropertyConfigurableContainer {
 
-   public CustomNoSqlDataBaseContainer() {
+   public CustomNoSqlContainer() {
       super(DockerImageName.parse("mongo:5.0.17"));
-      withEnv("MONGO_INITDB_DATABASE", "sample-api");
+      withEnv("MONGO_INITDB_DATABASE", "sample_api");
       setHostAccessible(true);
 
       start();
@@ -30,6 +30,6 @@ public class CustomNoSqlDataBaseContainer extends MongoDBContainer
    }
 
    private String createUrl() {
-      return getReplicaSetUrl("sample-api");
+      return getReplicaSetUrl("sample_api");
    }
 }

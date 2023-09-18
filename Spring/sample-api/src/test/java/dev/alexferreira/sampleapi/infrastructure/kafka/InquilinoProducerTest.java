@@ -14,6 +14,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.testcontainers.shaded.org.bouncycastle.asn1.crmf.SinglePubInfo;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +22,7 @@ class InquilinoProducerTest extends BaseUnitTests {
 
    @Mock ObjectMapper objectMapper;
    @Mock BaseProducer<String> baseProducer;
-   String topicName = "topicName";
+   final String topicName = "topicName";
 
    InquilinoProducer inquilinoProducer;
 
@@ -29,11 +30,12 @@ class InquilinoProducerTest extends BaseUnitTests {
 
    @BeforeEach
    void setUp() {
-      inquilinoProducer = new InquilinoProducer(baseProducer, topicName, objectMapper);
+      inquilinoProducer = new InquilinoProducer(baseProducer, objectMapper);
    }
 
+   @SuppressWarnings("unchecked")
    @Test
-   void send() throws JsonProcessingException {
+   void shouldSendMessageForTopic() throws JsonProcessingException {
       ArgumentCaptor<InquilinoCreatedMessage> payloadCaptor = ArgumentCaptor.forClass(InquilinoCreatedMessage.class);
       ArgumentCaptor<BaseProducerMessage<String>> messageCaptor = ArgumentCaptor.forClass(BaseProducerMessage.class);
       String message = "message";
@@ -41,7 +43,7 @@ class InquilinoProducerTest extends BaseUnitTests {
       Mockito.when(objectMapper.writeValueAsString(payloadCaptor.capture())).thenReturn(message);
       Mockito.doNothing().when(baseProducer).send(messageCaptor.capture());
 
-      inquilinoProducer.send(inquilino);
+      inquilinoProducer.send(inquilino, topicName);
 
       assertEquals(inquilino.getId().toString(), payloadCaptor.getValue().inquilinoId);
       assertEquals(inquilino.getDocumento(), payloadCaptor.getValue().inquilinoDocumento);
@@ -51,5 +53,12 @@ class InquilinoProducerTest extends BaseUnitTests {
 
       Mockito.verify(objectMapper).writeValueAsString(payloadCaptor.getValue());
       Mockito.verify(baseProducer).send(messageCaptor.getValue());
+   }
+
+   @Test
+   void shouldThrow_whenBaseProducerThrow() {
+      Mockito.doThrow(RuntimeException.class).when(baseProducer).send(Mockito.any());
+
+      assertThrows(RuntimeException.class, () -> inquilinoProducer.send(inquilino, topicName));
    }
 }

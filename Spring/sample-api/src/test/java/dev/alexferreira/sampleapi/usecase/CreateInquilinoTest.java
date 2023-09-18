@@ -1,18 +1,29 @@
 package dev.alexferreira.sampleapi.usecase;
 
+import dev.alexferreira.sampleapi.common.fixture.DomainFixtures;
 import dev.alexferreira.sampleapi.common.fixture.InputFixtures;
 import dev.alexferreira.sampleapi.common.test.BaseUnitTests;
 import dev.alexferreira.sampleapi.domain.inquilino.ImagemInquilinoStorage;
 import dev.alexferreira.sampleapi.domain.inquilino.Inquilino;
-import dev.alexferreira.sampleapi.domain.inquilino.InquilinoCreatedProducer;
+import dev.alexferreira.sampleapi.domain.inquilino.InquilinoProducer;
 import dev.alexferreira.sampleapi.domain.inquilino.InquilinoRepository;
+import dev.alexferreira.sampleapi.domain.inquilino.exception.InquilinoExistenteException;
+import dev.alexferreira.sampleapi.usecase.input.CreateInquilinoInput;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import javax.transaction.Transactional;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,21 +37,41 @@ class CreateInquilinoTest extends BaseUnitTests {
    @Mock
    private ImagemInquilinoStorage imagemInquilinoStorage;
    @Mock
-   private InquilinoCreatedProducer inquilinoCreatedProducer;
+   private InquilinoProducer inquilinoProducer;
+   private final String createdTopicName = "created-topic";
 
    @InjectMocks
    private CreateInquilino useCase;
 
    private final CreateInquilinoInput input = InputFixtures.createInquilinoInput();
 
+   @BeforeEach
+   void setUp() {
+      ReflectionTestUtils.setField(useCase, "createdTopicName", createdTopicName);
+      Mockito.clearAllCaches();
+   }
+
    @AfterEach
    void tearDown() {
-      Mockito.verifyNoMoreInteractions(inquilinoRepository, imagemInquilinoStorage, inquilinoCreatedProducer);
+      Mockito.verifyNoMoreInteractions(inquilinoRepository, imagemInquilinoStorage, inquilinoProducer);
    }
 
    @Test
    void shouldBeAnnotatedByService() {
-      assertNotNull(CreateInquilino.class.getAnnotation(org.springframework.stereotype.Service.class));
+      assertNotNull(useCase.getClass().getAnnotation(Service.class));
+   }
+
+   @Test
+   void shouldBeTransactional() {
+      Method executeMethod = Arrays.stream(useCase.getClass().getMethods()).findFirst().get();
+      assertNotNull(executeMethod.getAnnotation(Transactional.class));
+   }
+
+   @Test
+   void shouldHaveValueAnottationInTopicField() {
+      Constructor constructor = Arrays.stream(useCase.getClass().getConstructors()).findFirst().get();
+      Value annotation = constructor.getParameters()[3].getAnnotation(Value.class);
+      assertEquals("${spring.kafka.producer.properties.topics.inquilino}", annotation.value());
    }
 
    @Test
@@ -56,9 +87,35 @@ class CreateInquilinoTest extends BaseUnitTests {
       assertEquals(input.documento, inquilinoArgumentCaptor.getValue().getDocumento());
 
       Mockito.verify(inquilinoRepository).findByDocumento(input.documento);
-      Mockito.verify(inquilinoRepository).save(inquilinoArgumentCaptor.getAllValues().get(0));
-      Mockito.verify(imagemInquilinoStorage).save(inquilinoArgumentCaptor.getAllValues().get(1), input.imagem);
-      Mockito.verify(inquilinoCreatedProducer).send(inquilinoArgumentCaptor.getAllValues().get(1));
+      Mockito.verify(imagemInquilinoStorage).save(inquilinoArgumentCaptor.getAllValues().get(0), input.imagem);
+
+      Mockito.verify(inquilinoRepository).save(inquilinoArgumentCaptor.getAllValues().get(1));
+      Mockito.verify(inquilinoProducer).send(inquilinoArgumentCaptor.getAllValues().get(1), createdTopicName);
+   }
+
+   @Test
+   void shouldThrow_whenThereWasInquilinoByDocument() {
+      Optional<Inquilino> inquilino = Optional.of(DomainFixtures.createInquilino());
+
+      Mockito.when(inquilinoRepository.findByDocumento(input.documento)).thenReturn(inquilino);
+
+      assertThrows(InquilinoExistenteException.class, () -> useCase.execute(input));
+
+      Mockito.verify(inquilinoRepository).findByDocumento(input.documento);
+   }
+
+   @Test
+   void shouldThrow_whenProducerThrows() {
+      ArgumentCaptor<Inquilino> inquilinoArgumentCaptor = ArgumentCaptor.forClass(Inquilino.class);
+      Mockito.when(inquilinoRepository.findByDocumento(input.documento)).thenReturn(Optional.empty());
+      Mockito.when(imagemInquilinoStorage.save(inquilinoArgumentCaptor.capture(), Mockito.any())).thenReturn("path");
+      Mockito.when(inquilinoRepository.save(inquilinoArgumentCaptor.capture())).thenAnswer(invocation -> inquilinoArgumentCaptor.getValue());
+      Mockito.doThrow(RuntimeException.class).when(inquilinoProducer).send(Mockito.any(), Mockito.any());
+
+      assertThrows(RuntimeException.class, () -> useCase.execute(input));
+
+      Mockito.verify(inquilinoRepository).findByDocumento(input.documento);
+      Mockito.verify(inquilinoProducer).send(Mockito.any(), Mockito.any());
    }
 
    @Test

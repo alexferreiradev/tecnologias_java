@@ -1,6 +1,6 @@
 package dev.alexferreira.sampleapi.adapter.rest.request;
 
-import dev.alexferreira.sampleapi.usecase.CreateInquilinoInput;
+import dev.alexferreira.sampleapi.usecase.input.CreateInquilinoInput;
 
 public class CreateInquilinoRequest {
 

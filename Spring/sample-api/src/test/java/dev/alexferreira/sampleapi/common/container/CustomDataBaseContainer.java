@@ -8,14 +8,14 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
 
-public class CustomSqlDataBaseContainer extends GenericContainer<CustomSqlDataBaseContainer>
+public class CustomDataBaseContainer extends GenericContainer<CustomDataBaseContainer>
    implements InitializerConfigurableContainer, DynamicPropertyConfigurableContainer {
 
-   public CustomSqlDataBaseContainer() {
+   public CustomDataBaseContainer() {
       super(DockerImageName.parse("debezium/postgres:14-alpine").asCompatibleSubstituteFor("postgres"));
-      addEnv("POSTGRES_DB", "sample-api");
-      addEnv("POSTGRES_USER", "postgres");
-      addEnv("POSTGRES_PASSWORD", "postgres");
+      addEnv("POSTGRES_DB", "sample_api");
+      addEnv("POSTGRES_USER", "sample_api");
+      addEnv("POSTGRES_PASSWORD", "sample_api");
       addExposedPort(5432);
 
       start();
@@ -30,7 +30,7 @@ public class CustomSqlDataBaseContainer extends GenericContainer<CustomSqlDataBa
 
    private String createDataBaseUrl() {
       String port = String.valueOf(getFirstMappedPort());
-      String dataBaseUrl = String.format("jdbc:postgresql://localhost:%s/sample-api", port);
+      String dataBaseUrl = String.format("jdbc:postgresql://localhost:%s/sample_api", port);
       return dataBaseUrl;
    }
 

@@ -1,6 +1,7 @@
 package dev.alexferreira.sampleapi.adapter.rest;
 
 import dev.alexferreira.sampleapi.adapter.rest.request.CreateInquilinoRequest;
+import dev.alexferreira.sampleapi.domain.inquilino.exception.InquilinoExistenteException;
 import dev.alexferreira.sampleapi.usecase.CreateInquilino;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

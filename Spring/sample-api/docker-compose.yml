@@ -6,9 +6,6 @@ networks:
     external: false
     driver: "bridge"
 
-volumes:
-    db-data: {}
-
 services:
   api:
     build:
@@ -20,53 +17,119 @@ services:
     environment:
       DB_HOST: "db"
       MONGO_HOST: "nosql-db"
+      KAFKA_BOOTSTRAP_SERVERS: "kafka:29091"
+      STORAGE_CONNECTION_STRING: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://storage:10000/devstoreaccount1;QueueEndpoint=http://storage:10001/devstoreaccount1;TableEndpoint=http://storage:10002/devstoreaccount1;"
     ports:
-      - "8082:8080"
-    networks:
-      - db-net
+      - "8089:8080"
+#    networks:
+#      - db-net
     depends_on:
       - db
       - nosql-db
+      - kafka
+      - storage
     image: 'produto-api:${TAG:-latest}'
+
   db:
-    image: debezium/postgres:14-alpine
+    image: postgres:12-alpine
     environment:
-      POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'postgres'
-      POSTGRES_DB: 'sample-api'
+      POSTGRES_USER: 'sample_api'
+      POSTGRES_PASSWORD: 'sample_api'
+      POSTGRES_DB: 'sample_api'
     ports:
       - "5432:5432"
     command: ["postgres"]
-    volumes:
-      - ./db-data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres'" ]
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U sample_api'" ]
       interval: 5s
       timeout: 5s
       retries: 10
-    networks:
-      - db-net
+#    networks:
+#      - db-net
   nosql-db:
     image: mongo:5.0.17
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: mongo
-      MONGO_INITDB_DATABASE: sample-api
+      MONGO_INITDB_ROOT_PASSWORD: sample_api
+      MONGO_INITDB_DATABASE: sample_api
     ports:
       - "27017:27017"
-    networks:
-      - db-net
+#    networks:
+#      - db-net
+
   mongo-express:
     image: mongo-express
-    restart: always
     depends_on:
       - nosql-db
     ports:
       - "8081:8081"
-    networks:
-      - db-net
+#    networks:
+#      - db-net
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: mongo
+      ME_CONFIG_MONGODB_ADMINPASSWORD: sample_api
       ME_CONFIG_MONGODB_SERVER: nosql-db
 
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    hostname: kafka
+    ports:
+      - "29091:29091"
+    environment:
+      BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2183
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_HOST://:29091
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://kafka:29091
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+#    networks:
+#      - db-net
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "unset", "JMX_PORT", ":", "kafka-topics.sh", "--zookeeper", "zookeeper:2183", "--list" ]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    hostname: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2183
+    healthcheck:
+      test: echo srvr | nc zookeeper 2183 || exit 1
+      retries: 20
+      interval: 10s
+#    networks:
+#      - db-net
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    hostname: kafka-ui
+    ports:
+      - "28080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2183
+    depends_on:
+      - kafka
+      - zookeeper
+    healthcheck:
+      interval: 10s
+      retries: 20
+      start_period: 10s
+      test: wget --spider http://localhost:8080/api/clusters -O /dev/null || exit 1
+#    networks:
+#      - db-net
+  storage:
+    image: mcr.microsoft.com/azure-storage/azurite:3.17.1
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+#    networks:
+#      - db-net
