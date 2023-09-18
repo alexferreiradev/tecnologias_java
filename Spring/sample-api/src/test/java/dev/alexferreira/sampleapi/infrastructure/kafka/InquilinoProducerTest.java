@@ -32,6 +32,7 @@ class InquilinoProducerTest extends BaseUnitTests {
       inquilinoProducer = new InquilinoProducer(baseProducer, topicName, objectMapper);
    }
 
+   @SuppressWarnings("unchecked")
    @Test
    void send() throws JsonProcessingException {
       ArgumentCaptor<InquilinoCreatedMessage> payloadCaptor = ArgumentCaptor.forClass(InquilinoCreatedMessage.class);

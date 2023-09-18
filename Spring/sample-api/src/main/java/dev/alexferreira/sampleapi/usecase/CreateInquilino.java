@@ -4,10 +4,12 @@ import dev.alexferreira.sampleapi.domain.inquilino.ImagemInquilinoStorage;
 import dev.alexferreira.sampleapi.domain.inquilino.Inquilino;
 import dev.alexferreira.sampleapi.domain.inquilino.InquilinoCreatedProducer;
 import dev.alexferreira.sampleapi.domain.inquilino.InquilinoRepository;
+import dev.alexferreira.sampleapi.domain.inquilino.exception.InquilinoExistenteException;
+import dev.alexferreira.sampleapi.usecase.input.CreateInquilinoInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import javax.transaction.Transactional;
 
 @Service
 public class CreateInquilino {
@@ -27,12 +29,11 @@ public class CreateInquilino {
       this.inquilinoCreatedProducer = inquilinoCreatedProducer;
    }
 
+   @Transactional
    public void execute(CreateInquilinoInput input) {
-      Optional<Inquilino> possibleInquilino = inquilinoRepository.findByDocumento(input.documento);
-
-      if(possibleInquilino.isPresent()) {
-         throw new RuntimeException("Inquilino já cadastrado");
-      }
+      inquilinoRepository.findByDocumento(input.documento).ifPresent(inquilino -> {
+         throw new InquilinoExistenteException();
+      });
 
       Inquilino inquilino = new Inquilino();
       inquilino.setNome(input.nome);

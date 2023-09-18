@@ -7,12 +7,4 @@ public class InquilinoCreatedMessage {
    public String inquilinoId;
    public String inquilinoDocumento;
 
-   public BaseProducerMessage<InquilinoCreatedMessage> toBaseProducerMessage(String topic) {
-      BaseProducerMessage<InquilinoCreatedMessage> message = new BaseProducerMessage<>();
-      message.topicName = topic;
-      message.key = inquilinoId;
-      message.message = this;
-
-      return message;
-   }
 }

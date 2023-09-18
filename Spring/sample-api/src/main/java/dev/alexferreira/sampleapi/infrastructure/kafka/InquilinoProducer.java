@@ -46,6 +46,7 @@ public class InquilinoProducer implements InquilinoCreatedProducer {
       InquilinoCreatedMessage payload = new InquilinoCreatedMessage();
       payload.inquilinoId = inquilino.getId().toString();
       payload.inquilinoDocumento = inquilino.getDocumento();
+
       return payload;
    }
 

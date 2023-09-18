@@ -1,6 +1,4 @@
-package dev.alexferreira.sampleapi.usecase;
-
-import dev.alexferreira.sampleapi.domain.inquilino.Inquilino;
+package dev.alexferreira.sampleapi.usecase.input;
 
 public class CreateInquilinoInput {
 
