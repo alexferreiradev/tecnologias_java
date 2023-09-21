@@ -38,3 +38,6 @@ out/
 
 ### Cloud Native vars
 .env*
+
+# load test files
+load-test
