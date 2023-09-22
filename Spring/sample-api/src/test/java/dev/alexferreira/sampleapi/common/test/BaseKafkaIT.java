@@ -33,7 +33,7 @@ import java.util.Map;
 
 @ActiveProfiles("dev")
 @ExtendWith(SpringExtension.class)
-@TestPropertySource(locations = "classpath:application-dev.properties")
+@TestPropertySource(locations = "classpath:application-kafka.properties")
 @Import({
    KafkaAutoConfiguration.class,
    JacksonAutoConfiguration.class,

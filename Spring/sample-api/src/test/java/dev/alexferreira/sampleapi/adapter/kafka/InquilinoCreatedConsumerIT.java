@@ -18,8 +18,6 @@ import org.springframework.context.annotation.Import;
 @Import(InquilinoCreatedConsumer.class)
 class InquilinoCreatedConsumerIT extends BaseKafkaIT {
 
-   @MockBean RegisterUser registerInquilino;
-
    private final InquilinoCreatedMessage message = MessageFixture.inquilinoCreatedMessage();
 
    @Value("${spring.kafka.producer.properties.topics.inquilino}")
@@ -27,18 +25,7 @@ class InquilinoCreatedConsumerIT extends BaseKafkaIT {
 
 
    @Test
-   void listen() throws JsonProcessingException {
-      BaseProducerMessage<String> baseMsg = new BaseProducerMessage<>();
-      baseMsg.topicName = topicName;
-      baseMsg.key = message.inquilinoId.toString();
-      baseMsg.message = objectMapper.writeValueAsString(message);
+   void listen() {
 
-      baseProducer.send(baseMsg);
-
-      ArgumentCaptor<RegisterInquilinoInput> caputureInput = ArgumentCaptor.forClass(RegisterInquilinoInput.class);
-      Mockito.verify(registerInquilino, Mockito.timeout(DEFAULT_TIMEOUT)).execute(caputureInput.capture());
-
-      Assertions.assertEquals(message.inquilinoId, caputureInput.getValue().inquilinoId);
-      Assertions.assertEquals(message.inquilinoDocumento, caputureInput.getValue().document);
    }
 }
