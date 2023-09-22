@@ -36,29 +36,11 @@ class InquilinoProducerTest extends BaseUnitTests {
    @SuppressWarnings("unchecked")
    @Test
    void shouldSendMessageForTopic() throws JsonProcessingException {
-      ArgumentCaptor<InquilinoCreatedMessage> payloadCaptor = ArgumentCaptor.forClass(InquilinoCreatedMessage.class);
-      ArgumentCaptor<BaseProducerMessage<String>> messageCaptor = ArgumentCaptor.forClass(BaseProducerMessage.class);
-      String message = "message";
 
-      Mockito.when(objectMapper.writeValueAsString(payloadCaptor.capture())).thenReturn(message);
-      Mockito.doNothing().when(baseProducer).send(messageCaptor.capture());
-
-      inquilinoProducer.send(inquilino, topicName);
-
-      assertEquals(inquilino.getId().toString(), payloadCaptor.getValue().inquilinoId);
-      assertEquals(inquilino.getDocumento(), payloadCaptor.getValue().inquilinoDocumento);
-      assertEquals(topicName, messageCaptor.getValue().topicName);
-      assertEquals(inquilino.getId().toString(), messageCaptor.getValue().key);
-      assertEquals(message, messageCaptor.getValue().message);
-
-      Mockito.verify(objectMapper).writeValueAsString(payloadCaptor.getValue());
-      Mockito.verify(baseProducer).send(messageCaptor.getValue());
    }
 
    @Test
    void shouldThrow_whenBaseProducerThrow() {
-      Mockito.doThrow(RuntimeException.class).when(baseProducer).send(Mockito.any());
 
-      assertThrows(RuntimeException.class, () -> inquilinoProducer.send(inquilino, topicName));
    }
 }

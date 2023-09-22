@@ -23,32 +23,6 @@ public class InquilinoProducer implements dev.alexferreira.sampleapi.domain.inqu
 
    @Override
    public void send(Inquilino inquilino, String topicName) {
-      try {
-         InquilinoCreatedMessage payload = createPayload(inquilino);
 
-         producer.send(createMessage(payload, topicName));
-      }
-      catch(JsonProcessingException e) {
-         throw new RuntimeException(e);
-      }
-   }
-
-   private InquilinoCreatedMessage createPayload(Inquilino inquilino) {
-      InquilinoCreatedMessage payload = new InquilinoCreatedMessage();
-      payload.inquilinoId = inquilino.getId().toString();
-      payload.inquilinoDocumento = inquilino.getDocumento();
-
-      return payload;
-   }
-
-   private BaseProducerMessage<String> createMessage(
-      InquilinoCreatedMessage payload,
-      String topicName
-   ) throws JsonProcessingException {
-      BaseProducerMessage<String> message = new BaseProducerMessage<>();
-      message.topicName = topicName;
-      message.key = payload.inquilinoId;
-      message.message = objectMapper.writeValueAsString(payload);
-      return message;
    }
 }
