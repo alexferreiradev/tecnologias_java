@@ -12,6 +12,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
+@Service
 public class InquilinoCreatedConsumer {
 
    final Logger logger;
@@ -25,6 +26,13 @@ public class InquilinoCreatedConsumer {
       this.objectMapper = objectMapper;
    }
 
-   public void listen() throws JsonProcessingException {
+   @KafkaListener(topics = {"pub.inquilino-created"}, groupId = "sample-api")
+   public void listen(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload String message) throws JsonProcessingException {
+      logger.debug("Inquilino created listener consuming: {} {}", key, message);
+
+      InquilinoCreatedMessage msg = objectMapper.readValue(message, InquilinoCreatedMessage.class);
+      registerInquilino.execute(msg.toInput());
+
+      logger.info("Inquilino created consumed: {} {}", key, message);
    }
 }
