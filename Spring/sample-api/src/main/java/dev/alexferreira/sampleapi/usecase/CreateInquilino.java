@@ -2,12 +2,10 @@ package dev.alexferreira.sampleapi.usecase;
 
 import dev.alexferreira.sampleapi.domain.inquilino.ImagemInquilinoStorage;
 import dev.alexferreira.sampleapi.domain.inquilino.Inquilino;
-import dev.alexferreira.sampleapi.domain.inquilino.InquilinoProducer;
 import dev.alexferreira.sampleapi.domain.inquilino.InquilinoRepository;
 import dev.alexferreira.sampleapi.domain.inquilino.exception.InquilinoExistenteException;
 import dev.alexferreira.sampleapi.usecase.input.CreateInquilinoInput;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,19 +15,14 @@ public class CreateInquilino {
 
    private final InquilinoRepository inquilinoRepository;
    private final ImagemInquilinoStorage imagemInquilinoStorage;
-   private final InquilinoProducer inquilinoCreatedProducer;
-   private final String createdTopicName;
 
    @Autowired
    public CreateInquilino(
-      InquilinoRepository inquilinoRepository, ImagemInquilinoStorage imagemInquilinoStorage,
-      InquilinoProducer inquilinoCreatedProducer,
-      @Value("${spring.kafka.producer.properties.topics.inquilino}") String createdTopicName
+      InquilinoRepository inquilinoRepository,
+      ImagemInquilinoStorage imagemInquilinoStorage
    ) {
       this.inquilinoRepository = inquilinoRepository;
       this.imagemInquilinoStorage = imagemInquilinoStorage;
-      this.inquilinoCreatedProducer = inquilinoCreatedProducer;
-      this.createdTopicName = createdTopicName;
    }
 
    @Transactional
@@ -49,7 +42,5 @@ public class CreateInquilino {
       }
 
       inquilinoRepository.save(inquilino);
-
-      inquilinoCreatedProducer.send(inquilino, createdTopicName);
    }
 }
