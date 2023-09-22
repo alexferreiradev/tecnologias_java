@@ -16,5 +16,14 @@ public class RegisterUser {
 
       @Transactional
       public void execute(RegisterInquilinoInput input) {
+         saveUser(input);
+      }
+
+      private void saveUser(RegisterInquilinoInput input) {
+            User user = new User();
+            user.id = input.inquilinoId.toString();
+            user.document = input.document;
+
+            repository.save(user);
       }
 }
