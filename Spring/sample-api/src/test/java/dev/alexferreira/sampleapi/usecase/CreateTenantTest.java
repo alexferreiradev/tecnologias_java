@@ -27,8 +27,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CreateTenantTest extends BaseUnitTests {
 
-   private final CreateTenantInput input = InputFixtures.createInquilinoInput();
-   private final String createdTopicName = "created-topic";
+   private final CreateTenantInput input = InputFixtures.createTenantInput();
+	private final String createdTopicName = "created-topic";
    @Mock
    private TenantRepository tenantRepository;
    @Mock
@@ -79,7 +79,7 @@ class CreateTenantTest extends BaseUnitTests {
 
    @Test
    void shouldThrow_whenThereWasInquilinoByDocument() {
-      Optional<Tenant> inquilino = Optional.of(DomainFixtures.createInquilino());
+	   Optional<Tenant> inquilino = Optional.of(DomainFixtures.createTenant());
 
       Mockito.when(tenantRepository.findByDocument(input.document)).thenReturn(inquilino);
 

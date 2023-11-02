@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface InputFixtures {
 
-	static CreateTenantInput createInquilinoInput() {
+	static CreateTenantInput createTenantInput() {
 		CreateTenantInput input = new CreateTenantInput();
 		input.name = "Fake Name";
 		input.document = "123123";
@@ -20,7 +20,7 @@ public interface InputFixtures {
 		return input;
 	}
 
-	static RegisterTenantInput registerInquilinoInput() {
+	static RegisterTenantInput registerTenantInput() {
 		RegisterTenantInput input = new RegisterTenantInput();
 		input.tenantId = UUID.randomUUID();
 		input.document = TestRandomValue.generateCpf();

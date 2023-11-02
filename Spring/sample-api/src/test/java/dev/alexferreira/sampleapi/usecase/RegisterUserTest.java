@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 class RegisterUserTest extends BaseUnitTests {
 
-   private final RegisterTenantInput input = InputFixtures.registerInquilinoInput();
+   private final RegisterTenantInput input = InputFixtures.registerTenantInput();
 
    @InjectMocks RegisterUser usecase;
 

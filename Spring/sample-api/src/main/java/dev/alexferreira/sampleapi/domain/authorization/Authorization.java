@@ -1,6 +1,5 @@
 package dev.alexferreira.sampleapi.domain.authorization;
 
-import dev.alexferreira.sampleapi.domain.user.User;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -14,7 +13,7 @@ public class Authorization {
 	public String id;
 
 	@Field
-	public User userAuthorized;
+	public TenantAuthorized tenantAuthorized;
 	@Field
 	public String doorType;
 	@Field

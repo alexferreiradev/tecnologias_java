@@ -14,7 +14,7 @@ import org.mockito.Mock;
 class TenantProducerTest extends BaseUnitTests {
 
 	final String topicName = "topicName";
-	private final Tenant tenant = DomainFixtures.createInquilino();
+	private final Tenant tenant = DomainFixtures.createTenant();
 	@Mock
 	ObjectMapper objectMapper;
 	@Mock
