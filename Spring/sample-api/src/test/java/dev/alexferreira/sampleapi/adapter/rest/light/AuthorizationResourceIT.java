@@ -6,7 +6,7 @@ import dev.alexferreira.sampleapi.adapter.rest.request.CreateAuthorizationReques
 import dev.alexferreira.sampleapi.common.exception.response.ErrorEntitityResponse;
 import dev.alexferreira.sampleapi.common.fixture.RequestFixtures;
 import dev.alexferreira.sampleapi.common.test.light.BaseRest;
-import dev.alexferreira.sampleapi.domain.inquilino.exception.InquilinoExistenteException;
+import dev.alexferreira.sampleapi.domain.tenant.exception.TenantAlreadyExistsException;
 import dev.alexferreira.sampleapi.usecase.CreateAuthorization;
 import dev.alexferreira.sampleapi.usecase.input.CreateAuthorizationInput;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class AuthorizationResourceIT extends BaseRest {
 
    @Test
    void shouldReturnErrorResponse_whenUseCaseThrowDomainException() throws Exception {
-      InquilinoExistenteException exception = new InquilinoExistenteException();
+      TenantAlreadyExistsException exception = new TenantAlreadyExistsException();
       Mockito.doThrow(exception).when(useCase).execute(Mockito.any());
 
       mockMvc.perform(post(baseUrl).contentType(MediaType.APPLICATION_JSON)

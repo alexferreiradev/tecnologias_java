@@ -2,38 +2,38 @@ package dev.alexferreira.sampleapi.common.fixture;
 
 import dev.alexferreira.sampleapi.common.random.TestRandomValue;
 import dev.alexferreira.sampleapi.domain.authorization.Authorization;
-import dev.alexferreira.sampleapi.domain.inquilino.Inquilino;
+import dev.alexferreira.sampleapi.domain.tenant.Tenant;
 import dev.alexferreira.sampleapi.domain.user.User;
 
 import java.util.UUID;
 
 public interface DomainFixtures {
 
-   static Inquilino createInquilino() {
-      Inquilino inquilino = new Inquilino();
-      inquilino.setNome("Fake Name");
-      inquilino.setApartamento("101");
-      inquilino.setBloco("A");
-      inquilino.setDocumento(TestRandomValue.generateCpf());
-      inquilino.setImagePath("path/to/image");
+	static Tenant createInquilino() {
+		Tenant tenant = new Tenant();
+		tenant.setName("Fake Name");
+		tenant.setFlatNumber("101");
+		tenant.setTower("A");
+		tenant.setDocument(TestRandomValue.generateCpf());
+		tenant.setImagePath("path/to/image");
 
-      return inquilino;
-   }
+		return tenant;
+	}
 
-   static User createUser() {
-      User user = new User();
-      user.id = UUID.randomUUID().toString();
-      user.document = TestRandomValue.generateCpf();
+	static User createUser() {
+		User user = new User();
+		user.id = UUID.randomUUID().toString();
+		user.document = TestRandomValue.generateCpf();
 
-      return user;
-   }
+		return user;
+	}
 
-   static Authorization createAuthorization() {
-      Authorization authorization = new Authorization();
-      authorization.id = UUID.randomUUID().toString();
-      authorization.descPorta = "Fake Description floor gate";
-      authorization.tipoPorta = "Gate";
+	static Authorization createAuthorization() {
+		Authorization authorization = new Authorization();
+		authorization.id = UUID.randomUUID().toString();
+		authorization.doorDescription = "Fake Description floor gate";
+		authorization.doorType = "Gate";
 
-      return authorization;
-   }
+		return authorization;
+	}
 }

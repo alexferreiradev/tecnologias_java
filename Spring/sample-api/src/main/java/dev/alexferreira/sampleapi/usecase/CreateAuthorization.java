@@ -41,8 +41,8 @@ public class CreateAuthorization {
       Authorization authorization = new Authorization();
       authorization.userAuthorized = user;
       authorization.createdAt = Instant.now();
-      authorization.tipoPorta = input.indoorType;
-      authorization.descPorta = input.indoorDescription;
+      authorization.doorType = input.indoorType;
+      authorization.doorDescription = input.indoorDescription;
 
       return authorizationRepository.save(authorization);
    }

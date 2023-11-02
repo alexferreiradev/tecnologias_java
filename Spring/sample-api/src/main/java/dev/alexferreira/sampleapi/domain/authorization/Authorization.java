@@ -10,16 +10,16 @@ import java.time.Instant;
 @Document
 public class Authorization {
 
-   @Id
-   public String id;
+	@Id
+	public String id;
 
-   @Field
-   public User userAuthorized;
-   @Field
-   public String tipoPorta;
-   @Field
-   public String descPorta;
+	@Field
+	public User userAuthorized;
+	@Field
+	public String doorType;
+	@Field
+	public String doorDescription;
 
-   @Field
-   public Instant createdAt;
+	@Field
+	public Instant createdAt;
 }

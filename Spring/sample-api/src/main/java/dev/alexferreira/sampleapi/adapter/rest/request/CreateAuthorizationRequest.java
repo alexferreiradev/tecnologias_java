@@ -5,14 +5,14 @@ import dev.alexferreira.sampleapi.usecase.input.CreateAuthorizationInput;
 public class CreateAuthorizationRequest {
 
    public String document;
-   public String indoorType;
-   public String indoorDescription;
+   public String inDoorType;
+   public String inDoorDescription;
 
    public CreateAuthorizationInput toInput() {
       CreateAuthorizationInput input = new CreateAuthorizationInput();
       input.document = document;
-      input.indoorType = indoorType;
-      input.indoorDescription = indoorDescription;
+      input.indoorType = inDoorType;
+      input.indoorDescription = inDoorDescription;
 
       return input;
    }

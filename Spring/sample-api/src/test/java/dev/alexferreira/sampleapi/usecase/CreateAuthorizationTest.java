@@ -57,8 +57,8 @@ class CreateAuthorizationTest extends BaseUnitTests {
 
       assertEquals(authorizationArgumentCaptor.getValue().id, authId);
       assertEquals(user.document, authorizationArgumentCaptor.getValue().userAuthorized.document);
-      assertEquals(input.indoorType, authorizationArgumentCaptor.getValue().tipoPorta);
-      assertEquals(input.indoorDescription, authorizationArgumentCaptor.getValue().descPorta);
+      assertEquals(input.indoorType, authorizationArgumentCaptor.getValue().doorType);
+      assertEquals(input.indoorDescription, authorizationArgumentCaptor.getValue().doorDescription);
    }
 
    @Test
