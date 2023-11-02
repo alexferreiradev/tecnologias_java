@@ -10,16 +10,18 @@ import dev.alexferreira.sampleapi.domain.tenant.TenantRepository;
 import dev.alexferreira.sampleapi.domain.tenant.exception.TenantAlreadyExistsException;
 import dev.alexferreira.sampleapi.usecase.input.CreateTenantInput;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -54,10 +56,15 @@ class CreateTenantTest extends BaseUnitTests {
       assertNotNull(executeMethod.getAnnotation(Transactional.class));
    }
 
-   @Disabled
    @Test
    void shouldHaveValueAnottationInTopicField() {
-      fail();
+      Constructor<?> constructor = Arrays.stream(useCase.getClass().getConstructors()).findFirst().get();
+      Parameter valueTypedVariable = Arrays.stream(constructor.getParameters())
+              .filter(parameter -> parameter.isAnnotationPresent(Value.class))
+              .findFirst().get();
+      Value valueAnnotation = valueTypedVariable.getAnnotation(Value.class);
+
+      assertEquals("\\${spring.kafka.producer.properties.topics.tenant}", valueAnnotation.value());
    }
 
    @Test

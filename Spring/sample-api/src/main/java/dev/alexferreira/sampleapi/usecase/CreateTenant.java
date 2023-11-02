@@ -6,6 +6,7 @@ import dev.alexferreira.sampleapi.domain.tenant.TenantRepository;
 import dev.alexferreira.sampleapi.domain.tenant.exception.TenantAlreadyExistsException;
 import dev.alexferreira.sampleapi.usecase.input.CreateTenantInput;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,7 +20,9 @@ public class CreateTenant {
    @Autowired
    public CreateTenant(
            TenantRepository tenantRepository,
-           ImagemTenantStorage imagemTenantStorage
+           ImagemTenantStorage imagemTenantStorage,
+           @Value("\\${spring.kafka.producer.properties.topics.tenant}")
+           String topicName
    ) {
       this.tenantRepository = tenantRepository;
       this.imagemTenantStorage = imagemTenantStorage;
