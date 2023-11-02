@@ -10,16 +10,19 @@ import dev.alexferreira.sampleapi.domain.tenant.TenantRepository;
 import dev.alexferreira.sampleapi.domain.tenant.exception.TenantAlreadyExistsException;
 import dev.alexferreira.sampleapi.usecase.input.CreateTenantInput;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -27,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CreateTenantTest extends BaseUnitTests {
 
-   private final CreateTenantInput input = InputFixtures.createInquilinoInput();
+   private final CreateTenantInput input = InputFixtures.createTenantInput();
    private final String createdTopicName = "created-topic";
    @Mock
    private TenantRepository tenantRepository;
@@ -35,8 +38,17 @@ class CreateTenantTest extends BaseUnitTests {
    private ImagemTenantStorage imagemTenantStorage;
    @Mock
    private TenantProducer tenantProducer;
-   @InjectMocks
+
    private CreateTenant useCase;
+
+   @BeforeEach
+   void setUp() {
+      useCase = new CreateTenant(
+              tenantRepository,
+              imagemTenantStorage,
+              createdTopicName,
+              tenantProducer);
+   }
 
    @AfterEach
    void tearDown() {
@@ -54,32 +66,41 @@ class CreateTenantTest extends BaseUnitTests {
       assertNotNull(executeMethod.getAnnotation(Transactional.class));
    }
 
-   @Disabled
    @Test
    void shouldHaveValueAnottationInTopicField() {
-      fail();
+      Constructor<?> constructor = Arrays.stream(useCase.getClass().getConstructors()).findFirst().get();
+      Parameter valueTypedVariable = Arrays.stream(constructor.getParameters())
+              .filter(parameter -> parameter.isAnnotationPresent(Value.class))
+              .findFirst().get();
+      Value valueAnnotation = valueTypedVariable.getAnnotation(Value.class);
+
+      assertEquals("${spring.kafka.producer.properties.topics.tenant}", valueAnnotation.value());
    }
 
    @Test
-   void shouldSaveInquilino_whenInputIsValid() {
-      ArgumentCaptor<Tenant> inquilinoArgumentCaptor = ArgumentCaptor.forClass(Tenant.class);
+   void shouldSaveTenant_whenInputIsValid() {
+      ArgumentCaptor<Tenant> tenantArgumentCaptor = ArgumentCaptor.forClass(Tenant.class);
+      ArgumentCaptor<String> topicArgumentCaptor = ArgumentCaptor.forClass(String.class);
       Mockito.when(tenantRepository.findByDocument(input.document)).thenReturn(Optional.empty());
-      Mockito.when(imagemTenantStorage.save(inquilinoArgumentCaptor.capture(), Mockito.any())).thenReturn("path");
-      Mockito.when(tenantRepository.save(inquilinoArgumentCaptor.capture())).thenAnswer(invocation -> inquilinoArgumentCaptor.getValue());
+      Mockito.when(imagemTenantStorage.save(tenantArgumentCaptor.capture(), Mockito.any())).thenReturn("path");
+      Mockito.when(tenantRepository.save(tenantArgumentCaptor.capture())).thenAnswer(invocation -> tenantArgumentCaptor.getValue());
+      Mockito.doNothing().when(tenantProducer).send(tenantArgumentCaptor.capture(), topicArgumentCaptor.capture());
 
       useCase.execute(input);
 
-      assertEquals(input.name, inquilinoArgumentCaptor.getValue().getName());
-      assertEquals(input.document, inquilinoArgumentCaptor.getValue().getDocument());
+      assertEquals(input.name, tenantArgumentCaptor.getValue().getName());
+      assertEquals(input.document, tenantArgumentCaptor.getValue().getDocument());
+      assertEquals(createdTopicName, topicArgumentCaptor.getValue());
 
       Mockito.verify(tenantRepository).findByDocument(input.document);
-      Mockito.verify(imagemTenantStorage).save(inquilinoArgumentCaptor.getAllValues().get(0), input.image);
-      Mockito.verify(tenantRepository).save(inquilinoArgumentCaptor.getAllValues().get(1));
+      Mockito.verify(imagemTenantStorage).save(tenantArgumentCaptor.getAllValues().get(0), input.image);
+      Mockito.verify(tenantRepository).save(tenantArgumentCaptor.getAllValues().get(1));
+      Mockito.verify(tenantProducer).send(tenantArgumentCaptor.getAllValues().get(2), createdTopicName);
    }
 
    @Test
-   void shouldThrow_whenThereWasInquilinoByDocument() {
-      Optional<Tenant> inquilino = Optional.of(DomainFixtures.createInquilino());
+   void shouldThrow_whenThereWasTenantByDocument() {
+      Optional<Tenant> inquilino = Optional.of(DomainFixtures.createTenant());
 
       Mockito.when(tenantRepository.findByDocument(input.document)).thenReturn(inquilino);
 
@@ -90,7 +111,19 @@ class CreateTenantTest extends BaseUnitTests {
 
    @Test
    void shouldThrow_whenProducerThrows() {
+      ArgumentCaptor<Tenant> tenantArgumentCaptor = ArgumentCaptor.forClass(Tenant.class);
+      Mockito.when(tenantRepository.findByDocument(input.document)).thenReturn(Optional.empty());
+      Mockito.when(imagemTenantStorage.save(tenantArgumentCaptor.capture(), Mockito.any())).thenReturn("path");
+      Mockito.when(tenantRepository.save(tenantArgumentCaptor.capture())).thenAnswer(invocation -> tenantArgumentCaptor.getValue());
+      Mockito.doThrow(RuntimeException.class).when(tenantProducer).send(Mockito.any(), Mockito.any());
 
+      assertThrows(RuntimeException.class, () -> useCase.execute(input));
+
+      Mockito.verify(tenantRepository).findByDocument(input.document);
+      Mockito.verify(imagemTenantStorage).save(tenantArgumentCaptor.getAllValues().get(0), input.image);
+      Mockito.verify(tenantRepository).save(tenantArgumentCaptor.getAllValues().get(1));
+      Mockito.verify(tenantRepository).findByDocument(input.document);
+      Mockito.verify(tenantProducer).send(Mockito.any(), Mockito.any());
    }
 
    @Test

@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AzureStorageIT extends BaseStorageIT {
 
-	private final Tenant tenant = DomainFixtures.createInquilino();
+	private final Tenant tenant = DomainFixtures.createTenant();
 	@Autowired
 	ImagemTenantStorage azureStorage;
 

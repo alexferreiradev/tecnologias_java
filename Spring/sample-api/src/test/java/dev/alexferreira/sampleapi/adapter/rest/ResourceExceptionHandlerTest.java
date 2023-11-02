@@ -41,7 +41,7 @@ class ResourceExceptionHandlerTest extends BaseUnitTests {
       assertEquals(throwable.getMessage(), response.details.get("exception"));
       assertEquals(throwable.getStackTrace()[0].getClassName(), response.details.get("stacktrace"));
 
-      Mockito.verify(logger).error(response.message, throwable);
+      Mockito.verify(logger).error(response.message, throwable.getMessage());
    }
 
    @Test
@@ -56,7 +56,7 @@ class ResourceExceptionHandlerTest extends BaseUnitTests {
       assertEquals(throwable.getMessage(), response.details.get("exception"));
       assertNull(response.details.get("stacktrace"));
 
-      Mockito.verify(logger).error(response.message, throwable);
+      Mockito.verify(logger).error(response.message, throwable.getMessage());
    }
 
    @Test

@@ -12,6 +12,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 @EnableJpaRepositories
 @EnableMongoRepositories
 @EnableConfigurationProperties
+@EnableKafka
 public class SampleApiApplication {
 
 	public static void main(String[] args) {

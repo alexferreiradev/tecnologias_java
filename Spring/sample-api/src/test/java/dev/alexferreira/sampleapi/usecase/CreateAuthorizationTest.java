@@ -48,12 +48,13 @@ class CreateAuthorizationTest extends BaseUnitTests {
       ArgumentCaptor<Authorization> authorizationArgumentCaptor = ArgumentCaptor.forClass(Authorization.class);
 
       Mockito.when(userRepository.findByDocument(input.document)).thenReturn(Optional.of(user));
+      Mockito.when(repository.save(authorizationArgumentCaptor.capture())).thenAnswer(arg -> authorizationArgumentCaptor.getValue());
 
       String authId = useCase.execute(input);
 
       Mockito.verify(repository).save(authorizationArgumentCaptor.capture());
       Mockito.verify(logger).debug("Creating authorization for document: {}", input.document);
-      Mockito.verify(logger).info("Authorization created for document: {}", input.document);
+      Mockito.verify(logger).info("Authorization({}) created for document: {}", authId, input.document);
 
       assertEquals(authorizationArgumentCaptor.getValue().id, authId);
       assertEquals(user.document, authorizationArgumentCaptor.getValue().userAuthorized.document);

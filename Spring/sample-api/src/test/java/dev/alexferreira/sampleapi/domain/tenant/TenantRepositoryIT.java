@@ -15,7 +15,7 @@ class TenantRepositoryIT extends BaseRepositoryIT {
 
 	@Test
 	void shouldSaveInquilino() {
-		Tenant tenantSaved = repository.save(DomainFixtures.createInquilino());
+		Tenant tenantSaved = repository.save(DomainFixtures.createTenant());
 
 		Tenant tenant = repository.findById(tenantSaved.getId()).get();
 		assertNotNull(tenant);
@@ -23,14 +23,14 @@ class TenantRepositoryIT extends BaseRepositoryIT {
 
 	@Test
 	void shouldThrow_whenSaveInquilinoWithSameDocument() {
-		Tenant tenantSaved = repository.saveAndFlush(DomainFixtures.createInquilino());
-		Tenant tenantNew = DomainFixtures.createInquilino();
+		Tenant tenantSaved = repository.saveAndFlush(DomainFixtures.createTenant());
+		Tenant tenantNew = DomainFixtures.createTenant();
 		tenantNew.setDocument(tenantSaved.getDocument());
 
 		DataIntegrityViolationException violationException =
 				assertThrows(DataIntegrityViolationException.class, () -> repository.saveAndFlush(tenantNew));
 
-		String expectedExceptionMsg = String.format("Key (documento)=(%s) already exists", tenantNew.getDocument());
+		String expectedExceptionMsg = String.format("Key (document)=(%s) already exists", tenantNew.getDocument());
 		assertTrue(violationException.getMostSpecificCause().getMessage().contains(expectedExceptionMsg));
 
 		Tenant tenant = repository.findById(tenantSaved.getId()).get();

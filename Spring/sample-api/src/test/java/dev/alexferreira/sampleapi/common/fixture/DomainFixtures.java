@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface DomainFixtures {
 
-	static Tenant createInquilino() {
+	static Tenant createTenant() {
 		Tenant tenant = new Tenant();
 		tenant.setName("Fake Name");
 		tenant.setFlatNumber("101");

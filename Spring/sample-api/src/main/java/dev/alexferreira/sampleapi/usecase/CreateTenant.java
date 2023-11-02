@@ -2,10 +2,12 @@ package dev.alexferreira.sampleapi.usecase;
 
 import dev.alexferreira.sampleapi.domain.tenant.ImagemTenantStorage;
 import dev.alexferreira.sampleapi.domain.tenant.Tenant;
+import dev.alexferreira.sampleapi.domain.tenant.TenantProducer;
 import dev.alexferreira.sampleapi.domain.tenant.TenantRepository;
 import dev.alexferreira.sampleapi.domain.tenant.exception.TenantAlreadyExistsException;
 import dev.alexferreira.sampleapi.usecase.input.CreateTenantInput;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,14 +17,21 @@ public class CreateTenant {
 
    private final TenantRepository tenantRepository;
    private final ImagemTenantStorage imagemTenantStorage;
+   private final String createdTenantTopicName;
+   private final TenantProducer tenantProducer;
 
    @Autowired
    public CreateTenant(
            TenantRepository tenantRepository,
-           ImagemTenantStorage imagemTenantStorage
+           ImagemTenantStorage imagemTenantStorage,
+           @Value("${spring.kafka.producer.properties.topics.tenant}")
+           String topicName,
+           TenantProducer tenantProducer
    ) {
       this.tenantRepository = tenantRepository;
       this.imagemTenantStorage = imagemTenantStorage;
+      this.createdTenantTopicName = topicName;
+      this.tenantProducer = tenantProducer;
    }
 
    @Transactional
@@ -42,5 +51,7 @@ public class CreateTenant {
       }
 
       tenantRepository.save(tenant);
+
+      tenantProducer.send(tenant, createdTenantTopicName);
    }
 }

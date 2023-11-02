@@ -6,12 +6,12 @@ import dev.alexferreira.sampleapi.common.random.TestRandomValue;
 
 public interface RequestFixtures {
 
-	static CreateTenantRequest createInquilinoRequest() {
+	static CreateTenantRequest createTenantRequest() {
 		CreateTenantRequest request = new CreateTenantRequest();
-		request.nome = "Fake Name";
-		request.documento = "123123";
-		request.bloco = "Fake Bloco";
-		request.apartamento = "Fake Apartamento";
+		request.name = "Fake Name";
+		request.document = "123123";
+		request.tower = "Fake Bloco";
+		request.flatNumber = "Fake Apartamento";
 
 		return request;
 	}
