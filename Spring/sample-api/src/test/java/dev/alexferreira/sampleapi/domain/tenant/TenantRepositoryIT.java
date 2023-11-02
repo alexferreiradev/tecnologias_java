@@ -30,7 +30,7 @@ class TenantRepositoryIT extends BaseRepositoryIT {
 		DataIntegrityViolationException violationException =
 				assertThrows(DataIntegrityViolationException.class, () -> repository.saveAndFlush(tenantNew));
 
-		String expectedExceptionMsg = String.format("Key (documento)=(%s) already exists", tenantNew.getDocument());
+		String expectedExceptionMsg = String.format("Key (document)=(%s) already exists", tenantNew.getDocument());
 		assertTrue(violationException.getMostSpecificCause().getMessage().contains(expectedExceptionMsg));
 
 		Tenant tenant = repository.findById(tenantSaved.getId()).get();

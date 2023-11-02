@@ -4,17 +4,17 @@ import dev.alexferreira.sampleapi.usecase.input.CreateTenantInput;
 
 public class CreateTenantRequest {
 
-	public String nome;
-	public String bloco;
-	public String apartamento;
-	public String documento;
+	public String name;
+	public String tower;
+	public String flatNumber;
+	public String document;
 
 	public CreateTenantInput toInput() {
 		CreateTenantInput input = new CreateTenantInput();
-		input.name = nome;
-		input.document = documento;
-		input.tower = bloco;
-		input.flatNumber = apartamento;
+		input.name = name;
+		input.document = document;
+		input.tower = tower;
+		input.flatNumber = flatNumber;
 
 		return input;
 	}

@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = {TenantResource.class})
 class TenantResourceIT extends BaseRest {
 
-	private final CreateTenantRequest request = RequestFixtures.createInquilinoRequest();
+	private final CreateTenantRequest request = RequestFixtures.createTenantRequest();
 
 	@Autowired
 	MockMvc mockMvc;
@@ -33,12 +33,13 @@ class TenantResourceIT extends BaseRest {
 
 	@MockBean
 	CreateTenant createTenant;
+	private final String baseUrl = "/tenants";
 
 	@Test
 	void createInquilino() throws Exception {
 		Mockito.doNothing().when(createTenant).execute(request.toInput());
 
-		mockMvc.perform(post("/inquilinos").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post(baseUrl).contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(request))).andDo(MockMvcResultHandlers.print())
 				.andExpect(status().is2xxSuccessful());
 	}
@@ -48,9 +49,9 @@ class TenantResourceIT extends BaseRest {
 		TenantAlreadyExistsException exception = new TenantAlreadyExistsException();
 		Mockito.doThrow(exception).when(createTenant).execute(Mockito.any());
 
-		mockMvc.perform(post("/inquilinos").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post(baseUrl).contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(request))).andDo(MockMvcResultHandlers.print())
-				.andExpect(status().is2xxSuccessful())
+				.andExpect(status().is4xxClientError())
 				.andExpect(jsonPath("$.message").value(exception.code.message()))
 				.andExpect(jsonPath("$.code").value(exception.code.code()))
 		;
@@ -63,9 +64,9 @@ class TenantResourceIT extends BaseRest {
 
 	   Mockito.doThrow(exception).when(createTenant).execute(Mockito.any());
 
-      mockMvc.perform(post("/inquilinos").contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request))).andDo(MockMvcResultHandlers.print())
-         .andExpect(status().is2xxSuccessful())
+	   mockMvc.perform(post(baseUrl).contentType(MediaType.APPLICATION_JSON)
+					   .content(objectMapper.writeValueAsString(request))).andDo(MockMvcResultHandlers.print())
+			   .andExpect(status().is5xxServerError())
          .andExpect(jsonPath("$.message").value(errorEntitityResponse.message))
          .andExpect(jsonPath("$.code").value(errorEntitityResponse.code))
       ;

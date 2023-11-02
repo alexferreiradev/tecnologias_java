@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/tenant", consumes = "application/json", produces = "application/json")
+@RequestMapping(path = "/tenants", consumes = "application/json", produces = "application/json")
 public class TenantResource {
 
    private final CreateTenant createTenant;
