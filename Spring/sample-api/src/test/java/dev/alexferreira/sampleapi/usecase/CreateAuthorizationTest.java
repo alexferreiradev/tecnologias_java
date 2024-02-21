@@ -18,77 +18,86 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CreateAuthorizationTest extends BaseUnitTests {
 
-   private final CreateAuthorizationInput input = InputFixtures.createAuthorizationInput();
-   private final User user = DomainFixtures.createUser();
+	private final CreateAuthorizationInput input = InputFixtures.createAuthorizationInput();
+	private final User user = DomainFixtures.createUser();
 
-   @Mock AuthorizationRepository repository;
-   @Mock UserRepository userRepository;
-   @Mock Logger logger;
+	@Mock
+	AuthorizationRepository repository;
+	@Mock
+	UserRepository userRepository;
+	@Mock
+	Logger logger;
 
-   @InjectMocks
-   private CreateAuthorization useCase;
+	@InjectMocks
+	private CreateAuthorization useCase;
 
-   @AfterEach
-   void tearDown() {
-      Mockito.verifyNoMoreInteractions(repository, userRepository, logger);
-   }
+	@AfterEach
+	void tearDown() {
+		Mockito.verifyNoMoreInteractions(repository, userRepository, logger);
+	}
 
-   @Test
-   void shouldBeAService() {
-      assertNotNull(CreateAuthorization.class.getAnnotation(org.springframework.stereotype.Service.class));
-   }
+	@Test
+	void shouldBeAService() {
+		assertNotNull(CreateAuthorization.class.getAnnotation(org.springframework.stereotype.Service.class));
+	}
 
-   @Test
-   void shouldSaveAuthorization_whenUserFoundAndAuthorized() {
-      ArgumentCaptor<Authorization> authorizationArgumentCaptor = ArgumentCaptor.forClass(Authorization.class);
+	@Test
+	void shouldSaveAuthorization_whenUserFoundAndAuthorized() {
+		ArgumentCaptor<Authorization> authorizationArgumentCaptor = ArgumentCaptor.forClass(Authorization.class);
 
-      Mockito.when(userRepository.findByDocument(input.document)).thenReturn(Optional.of(user));
+		Mockito.when(userRepository.findByDocument(input.document)).thenReturn(Optional.of(user));
+		Mockito.when(repository.save(authorizationArgumentCaptor.capture())).then(invocation -> {
+			Authorization capture = authorizationArgumentCaptor.getValue();
+			capture.id = UUID.randomUUID().toString();
+			return capture;
+		});
 
-      String authId = useCase.execute(input);
+		String authId = useCase.execute(input);
 
-      Mockito.verify(repository).save(authorizationArgumentCaptor.capture());
-      Mockito.verify(logger).debug("Creating authorization for document: {}", input.document);
-      Mockito.verify(logger).info("Authorization created for document: {}", input.document);
+		Mockito.verify(repository).save(authorizationArgumentCaptor.getValue());
+		Mockito.verify(logger).debug("Creating authorization for document: {}", input.document);
+		Mockito.verify(logger).info("Authorization({}) created for document: {}", authId, input.document);
 
-      assertEquals(authorizationArgumentCaptor.getValue().id, authId);
-      assertEquals(user.document, authorizationArgumentCaptor.getValue().userAuthorized.document);
-      assertEquals(input.indoorType, authorizationArgumentCaptor.getValue().tipoPorta);
-      assertEquals(input.indoorDescription, authorizationArgumentCaptor.getValue().descPorta);
-   }
+		assertEquals(authorizationArgumentCaptor.getValue().id, authId);
+		assertEquals(user.document, authorizationArgumentCaptor.getValue().userAuthorized.document);
+		assertEquals(input.indoorType, authorizationArgumentCaptor.getValue().tipoPorta);
+		assertEquals(input.indoorDescription, authorizationArgumentCaptor.getValue().descPorta);
+	}
 
-   @Test
-   void shouldThrow_whenRepositoryThrows() {
-      Mockito.when(userRepository.findByDocument(input.document)).thenReturn(Optional.of(user));
-      Mockito.when(repository.save(Mockito.any())).thenThrow(IllegalArgumentException.class);
+	@Test
+	void shouldThrow_whenRepositoryThrows() {
+		Mockito.when(userRepository.findByDocument(input.document)).thenReturn(Optional.of(user));
+		Mockito.when(repository.save(Mockito.any())).thenThrow(IllegalArgumentException.class);
 
-      assertThrows(IllegalArgumentException.class, () -> useCase.execute(input));
+		assertThrows(IllegalArgumentException.class, () -> useCase.execute(input));
 
-      Mockito.verify(userRepository).findByDocument(input.document);
-      Mockito.verify(logger).debug("Creating authorization for document: {}", input.document);
-   }
+		Mockito.verify(userRepository).findByDocument(input.document);
+		Mockito.verify(logger).debug("Creating authorization for document: {}", input.document);
+	}
 
-   @Test
-   void shouldThrowError_whenUserNotFoundAndAuthorized() {
-      Mockito.when(userRepository.findByDocument(input.document)).thenReturn(Optional.empty());
+	@Test
+	void shouldThrowError_whenUserNotFoundAndAuthorized() {
+		Mockito.when(userRepository.findByDocument(input.document)).thenReturn(Optional.empty());
 
-      assertThrows(UserNotFoundException.class, () -> useCase.execute(input));
+		assertThrows(UserNotFoundException.class, () -> useCase.execute(input));
 
-      Mockito.verify(userRepository).findByDocument(input.document);
-      Mockito.verify(logger).debug("Creating authorization for document: {}", input.document);
-   }
+		Mockito.verify(userRepository).findByDocument(input.document);
+		Mockito.verify(logger).debug("Creating authorization for document: {}", input.document);
+	}
 
-   @Test
-   void shouldThrowError_whenUserRepositoryThrows() {
-      Mockito.when(userRepository.findByDocument(Mockito.any())).thenThrow(IllegalArgumentException.class);
+	@Test
+	void shouldThrowError_whenUserRepositoryThrows() {
+		Mockito.when(userRepository.findByDocument(Mockito.any())).thenThrow(IllegalArgumentException.class);
 
-      assertThrows(IllegalArgumentException.class, () -> useCase.execute(input));
+		assertThrows(IllegalArgumentException.class, () -> useCase.execute(input));
 
-      Mockito.verify(userRepository).findByDocument(Mockito.any());
-      Mockito.verify(logger).debug("Creating authorization for document: {}", input.document);
-   }
+		Mockito.verify(userRepository).findByDocument(Mockito.any());
+		Mockito.verify(logger).debug("Creating authorization for document: {}", input.document);
+	}
 }
