@@ -7,6 +7,7 @@ import dev.alexferreira.sampleapi.common.test.BaseUnitTests;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -33,6 +34,7 @@ class ResourceExceptionHandlerTest extends BaseUnitTests {
    @Test
    void shouldReturnErrorResponse_whenThrowableIsGeneric() {
       Throwable throwable = new Throwable("teste");
+      ArgumentCaptor<Object> objectArgumentCaptor = ArgumentCaptor.forClass(Object.class);
 
       ErrorEntitityResponse response = resourceExceptionHandler.handleThrowable(throwable);
 
@@ -41,13 +43,15 @@ class ResourceExceptionHandlerTest extends BaseUnitTests {
       assertEquals(throwable.getMessage(), response.details.get("exception"));
       assertEquals(throwable.getStackTrace()[0].getClassName(), response.details.get("stacktrace"));
 
-      Mockito.verify(logger).error(response.message, throwable);
+      Mockito.verify(logger).error(Mockito.eq(response.message), Mockito.eq(throwable), objectArgumentCaptor.capture());
+      assertEquals(response, objectArgumentCaptor.getValue());
    }
 
    @Test
    void shouldReturnErrorResponseWithDetails_whenThrowableHasNoStackTrace() {
       Throwable throwable = new Throwable("teste");
       throwable.setStackTrace(new StackTraceElement[] {});
+      ArgumentCaptor<Object> objectArgumentCaptor = ArgumentCaptor.forClass(Object.class);
 
       ErrorEntitityResponse response = resourceExceptionHandler.handleThrowable(throwable);
 
@@ -56,7 +60,8 @@ class ResourceExceptionHandlerTest extends BaseUnitTests {
       assertEquals(throwable.getMessage(), response.details.get("exception"));
       assertNull(response.details.get("stacktrace"));
 
-      Mockito.verify(logger).error(response.message, throwable);
+      Mockito.verify(logger).error(Mockito.eq(response.message), Mockito.eq(throwable), objectArgumentCaptor.capture());
+      assertEquals(response, objectArgumentCaptor.getValue());
    }
 
    @Test
