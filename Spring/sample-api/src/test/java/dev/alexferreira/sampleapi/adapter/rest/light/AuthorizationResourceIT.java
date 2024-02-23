@@ -53,7 +53,7 @@ class AuthorizationResourceIT extends BaseRest {
 
       mockMvc.perform(post(baseUrl).contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))).andDo(MockMvcResultHandlers.print())
-         .andExpect(status().is2xxSuccessful())
+         .andExpect(status().is4xxClientError())
          .andExpect(jsonPath("$.message").value(exception.code.message()))
          .andExpect(jsonPath("$.code").value(exception.code.code()))
       ;
@@ -68,7 +68,7 @@ class AuthorizationResourceIT extends BaseRest {
 
       mockMvc.perform(post(baseUrl).contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))).andDo(MockMvcResultHandlers.print())
-         .andExpect(status().is2xxSuccessful())
+         .andExpect(status().is5xxServerError())
          .andExpect(jsonPath("$.message").value(errorEntitityResponse.message))
          .andExpect(jsonPath("$.code").value(errorEntitityResponse.code))
       ;

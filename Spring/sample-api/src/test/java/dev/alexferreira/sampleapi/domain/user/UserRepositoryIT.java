@@ -38,7 +38,11 @@ class UserRepositoryIT extends BaseRepositoryIT {
       User user2 = DomainFixtures.createUser();
       user2.document = user.document;
 
-      assertThrows(DuplicateKeyException.class, () -> repository.insert(user2));
+      assertThrows(DuplicateKeyException.class, () -> {
+                 repository.save(user2);
+                 repository.findByDocument(user2.document);
+              }
+      );
    }
 
    @Test
