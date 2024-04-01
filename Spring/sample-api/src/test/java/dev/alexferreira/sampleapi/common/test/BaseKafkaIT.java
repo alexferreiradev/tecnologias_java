@@ -6,22 +6,17 @@ import dev.alexferreira.sampleapi.common.container.DynamicPropertyConfigurableCo
 import dev.alexferreira.sampleapi.configuration.LoggerBeanFactory;
 import dev.alexferreira.sampleapi.infrastructure.kafka.base.BaseProducer;
 import dev.alexferreira.sampleapi.infrastructure.kafka.base.BaseProducerMessage;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
@@ -48,10 +43,12 @@ public abstract class BaseKafkaIT {
       @Autowired protected BaseProducer<String> baseProducer;
       @Autowired protected ObjectMapper objectMapper;
       @Autowired protected KafkaProperties kafkaProperties;
+      @Autowired protected KafkaAdmin kafkaAdmin;
 
       private KafkaConsumer<String, String> kafkaConsumer;
       private final TopicPartition partition;
       private boolean started = false;
+      protected static final long DEFAULT_TIMEOUT = 30000L;
 
       protected BaseKafkaIT() {
             partition = new TopicPartition(getTestTopicName(), 0);
@@ -59,8 +56,10 @@ public abstract class BaseKafkaIT {
 
       protected void startKafka() {
             if (!started) {
+                  kafkaAdmin.createOrModifyTopics(new NewTopic(getTestTopicName(), 1, Short.parseShort("1")));
+
                   Map<String, Object> properties = kafkaProperties.buildConsumerProperties();
-                  properties.put("consumer.auto-offset-reset", "lasted");
+                  properties.put("consumer.auto-offset-reset", "earliest");
                   kafkaConsumer = new KafkaConsumer<>(properties);
                   kafkaConsumer.subscribe(Collections.singletonList(getTestTopicName()));
                   startKafkaClient(kafkaConsumer);
@@ -81,8 +80,6 @@ public abstract class BaseKafkaIT {
             kafkaConsumer.seekToEnd(kafkaConsumer.assignment());
             kafkaConsumer.poll(Duration.ofSeconds(15));
       }
-
-      protected static final long DEFAULT_TIMEOUT = 30000L;
 
       @DynamicPropertySource
       static void datasourceProperties(DynamicPropertyRegistry dynamicPropertyRegistry) {
