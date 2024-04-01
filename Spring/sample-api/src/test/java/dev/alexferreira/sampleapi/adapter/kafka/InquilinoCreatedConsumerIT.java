@@ -8,6 +8,7 @@ import dev.alexferreira.sampleapi.infrastructure.kafka.base.BaseProducerMessage;
 import dev.alexferreira.sampleapi.usecase.RegisterUser;
 import dev.alexferreira.sampleapi.usecase.input.RegisterInquilinoInput;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -25,6 +26,10 @@ class InquilinoCreatedConsumerIT extends BaseKafkaIT {
    @Value("${spring.kafka.producer.properties.topics.inquilino}")
    private String topicName;
 
+   @BeforeEach
+   void setUp() {
+      startKafka();
+   }
 
    @Test
    void listen() throws JsonProcessingException {
