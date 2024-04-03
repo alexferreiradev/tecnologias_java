@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.6'
+	id 'org.springframework.boot' version "${springbootVersion}"
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
@@ -28,9 +28,9 @@ dependencies {
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testImplementation 'org.apache.commons:commons-math:2.2'
 
-	testImplementation 'org.testcontainers:testcontainers:1.17.6'
-	testImplementation 'org.testcontainers:kafka:1.17.6'
-	testImplementation 'org.testcontainers:mongodb:1.17.6'
+	testImplementation "org.testcontainers:testcontainers:${testContainersVersion}"
+	testImplementation "org.testcontainers:kafka:${testContainersVersion}"
+	testImplementation "org.testcontainers:mongodb:${testContainersVersion}"
 
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
