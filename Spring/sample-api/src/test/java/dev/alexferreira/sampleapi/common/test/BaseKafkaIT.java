@@ -46,23 +46,22 @@ public abstract class BaseKafkaIT {
       @Autowired protected KafkaAdmin kafkaAdmin;
 
       private KafkaConsumer<String, String> kafkaConsumer;
-      private final TopicPartition partition;
+      private TopicPartition partition;
       private boolean started = false;
       protected static final long DEFAULT_TIMEOUT = 30000L;
 
-      protected BaseKafkaIT() {
-            partition = new TopicPartition(getTestTopicName(), 0);
-      }
-
       protected void startKafka() {
             if (!started) {
+                  partition = new TopicPartition(getTestTopicName(), 0);
                   kafkaAdmin.createOrModifyTopics(new NewTopic(getTestTopicName(), 1, Short.parseShort("1")));
 
                   Map<String, Object> properties = kafkaProperties.buildConsumerProperties();
-                  properties.put("consumer.auto-offset-reset", "earliest");
+                  properties.put("auto.offset.reset", "earliest");
+                  properties.put("heartbeat.interval.ms", "60000");
+                  properties.put("session.timeout.ms", "90000");
                   kafkaConsumer = new KafkaConsumer<>(properties);
-                  kafkaConsumer.subscribe(Collections.singletonList(getTestTopicName()));
-                  startKafkaClient(kafkaConsumer);
+                  kafkaConsumer.assign(Collections.singletonList(partition));
+                  startKafkaClient();
                   started = true;
             }
       }
@@ -76,7 +75,7 @@ public abstract class BaseKafkaIT {
             return kafkaConsumer.position(partition);
       }
 
-      private void startKafkaClient(KafkaConsumer<String, String> kafkaConsumer) {
+      private void startKafkaClient() {
             kafkaConsumer.seekToEnd(kafkaConsumer.assignment());
             kafkaConsumer.poll(Duration.ofSeconds(15));
       }
