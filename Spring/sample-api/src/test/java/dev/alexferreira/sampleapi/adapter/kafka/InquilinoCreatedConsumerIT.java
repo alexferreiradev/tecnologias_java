@@ -46,4 +46,9 @@ class InquilinoCreatedConsumerIT extends BaseKafkaIT {
       Assertions.assertEquals(message.inquilinoId, caputureInput.getValue().inquilinoId);
       Assertions.assertEquals(message.inquilinoDocumento, caputureInput.getValue().document);
    }
+
+   @Override
+   protected String getTestTopicName() {
+      return topicName;
+   }
 }
