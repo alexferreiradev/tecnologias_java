@@ -4,16 +4,16 @@ import dev.alexferreira.sampleapi.common.exception.DomainException;
 import dev.alexferreira.sampleapi.common.exception.response.ErrorEntitityResponse;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class ResourceExceptionHandler {
 
    final Logger logger;
