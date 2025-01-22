@@ -7,13 +7,13 @@ import org.springframework.core.env.Environment;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class SampleApiApplicationIT extends BaseIT {
+class GateApiApplicationIT extends BaseIT {
 
    @Autowired Environment environment;
 
    @Test
-   void main() {
+   void shouldEnvironmentLoaded_whenSpringStart() {
       assertNotNull(environment);
-      assertNotNull(environment.getProperty("spring.profiles.active"));
+      assertNotNull(environment.getProperty("logging.level.root"));
    }
 }
