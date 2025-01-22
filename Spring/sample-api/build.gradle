@@ -19,6 +19,7 @@ dependencies {
 		exclude group:'javax.transaction', module: 'jta'
 	}
 	implementation 'jakarta.transaction:jakarta.transaction-api:1.3.3'
+	implementation 'org.springframework.data:spring-data-mongodb:1.8.6.RELEASE'
 	implementation('org.springframework:spring-orm:3.2.18.RELEASE') {
 		exclude group:'javax.transaction', module: 'jta'
 	}
