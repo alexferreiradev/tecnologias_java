@@ -4,7 +4,7 @@ import dev.alexferreira.sampleapi.common.exception.DomainException;
 import dev.alexferreira.sampleapi.common.exception.response.ErrorEntitityResponse;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.ControllerAdvice;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
