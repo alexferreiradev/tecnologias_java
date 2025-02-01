@@ -1,27 +1,29 @@
 package dev.alexferreira.sampleapi.configuration.storage;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@ConfigurationProperties(prefix = "storage", ignoreUnknownFields = false)
+//@ConfigurationProperties(prefix = "storage", ignoreUnknownFields = false)
+@PropertySource("classpath:application.properties")
 public class AzureStorageProperties {
-   private String connectionString;
-   private String containerName;
+	private String connectionString;
 
-   public String getConnectionString() {
-      return connectionString;
-   }
+	private String containerName;
 
-   public void setConnectionString(String connectionString) {
-      this.connectionString = connectionString;
-   }
+	public String getConnectionString() {
+		return connectionString;
+	}
 
-   public String getContainerName() {
-      return containerName;
-   }
+	public void setConnectionString(String connectionString) {
+		this.connectionString = connectionString;
+	}
 
-   public void setContainerName(String containerName) {
-      this.containerName = containerName;
-   }
+	public String getContainerName() {
+		return containerName;
+	}
+
+	public void setContainerName(String containerName) {
+		this.containerName = containerName;
+	}
 }
