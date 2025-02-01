@@ -1,12 +1,11 @@
 package dev.alexferreira.sampleapi.common.container;
 
-import org.springframework.boot.test.util.TestPropertyValues;
+//import org.springframework.boot.test.util.TestPropertyValues;
+
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
-
-import java.util.Map;
 
 public class CustomKafkaContainer extends KafkaContainer
    implements InitializerConfigurableContainer, DynamicPropertyConfigurableContainer {
@@ -20,7 +19,7 @@ public class CustomKafkaContainer extends KafkaContainer
 
    @Override
    public void configure(ConfigurableApplicationContext applicationContext) {
-      TestPropertyValues.of(Map.of("spring.kafka.bootstrap-servers", getBootstrapServers())).applyTo(applicationContext);
+//      TestPropertyValues.of(Map.of("spring.kafka.bootstrap-servers", getBootstrapServers())).applyTo(applicationContext);
    }
 
    @Override

@@ -1,14 +1,16 @@
 package dev.alexferreira.sampleapi.adapter.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.alexferreira.sampleapi.adapter.rest.request.CreateInquilinoRequest;
+import dev.alexferreira.sampleapi.adapter.rest.request.CreateAuthorizationRequest;
 import dev.alexferreira.sampleapi.common.exception.response.ErrorEntitityResponse;
 import dev.alexferreira.sampleapi.common.fixture.RequestFixtures;
 import dev.alexferreira.sampleapi.common.test.ConfigurationMockBean;
 import dev.alexferreira.sampleapi.common.test.light.BaseRest;
 import dev.alexferreira.sampleapi.domain.inquilino.exception.InquilinoExistenteException;
-import dev.alexferreira.sampleapi.usecase.CreateInquilino;
+import dev.alexferreira.sampleapi.usecase.CreateAuthorization;
+import dev.alexferreira.sampleapi.usecase.input.CreateAuthorizationInput;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
@@ -21,32 +23,37 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import(ConfigurationMockBean.class)
-class InquilinoResourceIT extends BaseRest {
-
-	private final CreateInquilinoRequest request = RequestFixtures.createInquilinoRequest();
+class AuthorizationResourceIT extends BaseRest {
+	private final CreateAuthorizationRequest request = RequestFixtures.createAuthorizationRequest();
 
 	@Autowired
 	MockMvc mockMvc;
 	@Autowired
 	ObjectMapper objectMapper;
+
 	@Autowired
-	CreateInquilino createInquilino;
+	CreateAuthorization useCase;
+	private final String baseUrl = "/authorizations";
 
 	@Test
-	void createInquilino() throws Exception {
-		Mockito.doNothing().when(createInquilino).execute(request.toInput());
+	void shouldReturn200_whenRequestIsValid() throws Exception {
+		String authorizationId = "authorizationId";
+		ArgumentCaptor<CreateAuthorizationInput> captor = ArgumentCaptor.forClass(CreateAuthorizationInput.class);
+		Mockito.when(useCase.execute(captor.capture())).thenReturn(authorizationId);
 
-		mockMvc.perform(post("/inquilinos").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post(baseUrl).contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(request))).andDo(MockMvcResultHandlers.print())
-				.andExpect(status().is2xxSuccessful());
+				.andExpect(status().is2xxSuccessful())
+				.andExpect(jsonPath("$.authorizationId").value(authorizationId))
+		;
 	}
 
 	@Test
 	void shouldReturnErrorResponse_whenUseCaseThrowDomainException() throws Exception {
 		InquilinoExistenteException exception = new InquilinoExistenteException();
-		Mockito.doThrow(exception).when(createInquilino).execute(Mockito.any());
+		Mockito.doThrow(exception).when(useCase).execute(Mockito.any());
 
-		mockMvc.perform(post("/inquilinos").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post(baseUrl).contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(request))).andDo(MockMvcResultHandlers.print())
 				.andExpect(status().is4xxClientError())
 				.andExpect(jsonPath("$.message").value(exception.code.message()))
@@ -59,9 +66,9 @@ class InquilinoResourceIT extends BaseRest {
 		RuntimeException exception = new RuntimeException();
 		ErrorEntitityResponse errorEntitityResponse = new ErrorEntitityResponse();
 
-		Mockito.doThrow(exception).when(createInquilino).execute(Mockito.any());
+		Mockito.doThrow(exception).when(useCase).execute(Mockito.any());
 
-		mockMvc.perform(post("/inquilinos").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post(baseUrl).contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(request))).andDo(MockMvcResultHandlers.print())
 				.andExpect(status().is5xxServerError())
 				.andExpect(jsonPath("$.message").value(errorEntitityResponse.message))

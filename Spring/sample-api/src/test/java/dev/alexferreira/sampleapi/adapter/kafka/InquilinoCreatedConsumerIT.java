@@ -13,13 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
 @Import(InquilinoCreatedConsumer.class)
 class InquilinoCreatedConsumerIT extends BaseKafkaIT {
 
-   @MockBean RegisterUser registerInquilino;
+   RegisterUser registerInquilino;
 
    private final InquilinoCreatedMessage message = MessageFixture.inquilinoCreatedMessage();
 
