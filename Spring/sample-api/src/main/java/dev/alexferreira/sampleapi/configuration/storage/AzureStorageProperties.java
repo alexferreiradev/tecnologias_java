@@ -1,5 +1,6 @@
 package dev.alexferreira.sampleapi.configuration.storage;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
@@ -7,8 +8,11 @@ import org.springframework.context.annotation.PropertySource;
 //@ConfigurationProperties(prefix = "storage", ignoreUnknownFields = false)
 @PropertySource("classpath:application.properties")
 public class AzureStorageProperties {
+
+	@Value("${storage.connection-string}")
 	private String connectionString;
 
+	@Value("${storage.container-name}")
 	private String containerName;
 
 	public String getConnectionString() {
