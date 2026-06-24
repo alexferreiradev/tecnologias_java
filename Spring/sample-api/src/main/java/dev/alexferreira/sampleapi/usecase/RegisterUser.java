@@ -1,6 +1,6 @@
 package dev.alexferreira.sampleapi.usecase;
 
-import dev.alexferreira.sampleapi.domain.user.UserRepository;
+import dev.alexferreira.sampleapi.infrastructure.repository.mongo.UserRepository;
 import dev.alexferreira.sampleapi.usecase.input.RegisterTenantInput;
 import org.springframework.stereotype.Service;
 

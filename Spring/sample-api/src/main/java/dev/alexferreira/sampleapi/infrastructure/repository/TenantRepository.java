@@ -1,5 +1,6 @@
-package dev.alexferreira.sampleapi.domain.tenant;
+package dev.alexferreira.sampleapi.infrastructure.repository;
 
+import dev.alexferreira.sampleapi.domain.tenant.Tenant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

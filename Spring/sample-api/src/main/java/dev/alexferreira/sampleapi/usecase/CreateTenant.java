@@ -2,8 +2,8 @@ package dev.alexferreira.sampleapi.usecase;
 
 import dev.alexferreira.sampleapi.domain.tenant.ImagemTenantStorage;
 import dev.alexferreira.sampleapi.domain.tenant.Tenant;
-import dev.alexferreira.sampleapi.domain.tenant.TenantRepository;
 import dev.alexferreira.sampleapi.domain.tenant.exception.TenantAlreadyExistsException;
+import dev.alexferreira.sampleapi.infrastructure.repository.TenantRepository;
 import dev.alexferreira.sampleapi.usecase.input.CreateTenantInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

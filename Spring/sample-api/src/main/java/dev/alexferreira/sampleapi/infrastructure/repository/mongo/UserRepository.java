@@ -1,5 +1,6 @@
-package dev.alexferreira.sampleapi.domain.user;
+package dev.alexferreira.sampleapi.infrastructure.repository.mongo;
 
+import dev.alexferreira.sampleapi.domain.user.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

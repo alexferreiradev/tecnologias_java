@@ -2,6 +2,7 @@ package dev.alexferreira.sampleapi.domain.tenant;
 
 import dev.alexferreira.sampleapi.common.fixture.DomainFixtures;
 import dev.alexferreira.sampleapi.common.test.BaseRepositoryIT;
+import dev.alexferreira.sampleapi.infrastructure.repository.TenantRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

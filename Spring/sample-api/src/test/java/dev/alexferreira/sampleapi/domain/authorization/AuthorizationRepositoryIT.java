@@ -2,15 +2,16 @@ package dev.alexferreira.sampleapi.domain.authorization;
 
 import dev.alexferreira.sampleapi.common.fixture.DomainFixtures;
 import dev.alexferreira.sampleapi.common.test.BaseRepositoryIT;
-import dev.alexferreira.sampleapi.domain.user.User;
+import dev.alexferreira.sampleapi.infrastructure.repository.mongo.AuthorizationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class AuthorizationRepositoryIT extends BaseRepositoryIT {
 
-   @Autowired AuthorizationRepository repository;
+   @Autowired
+   AuthorizationRepository repository;
 
    private final Authorization authorization = DomainFixtures.createAuthorization();
 

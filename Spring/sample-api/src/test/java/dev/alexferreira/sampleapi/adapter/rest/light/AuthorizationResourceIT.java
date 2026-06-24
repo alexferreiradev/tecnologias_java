@@ -41,7 +41,7 @@ class AuthorizationResourceIT extends BaseRest {
 
       mockMvc.perform(post(baseUrl).contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))).andDo(MockMvcResultHandlers.print())
-         .andExpect(status().is2xxSuccessful())
+         .andExpect(status().isCreated())
          .andExpect(jsonPath("$.authorizationId").value(authorizationId))
       ;
    }

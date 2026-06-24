@@ -1,11 +1,11 @@
 package dev.alexferreira.sampleapi.usecase;
 
 import dev.alexferreira.sampleapi.domain.authorization.Authorization;
-import dev.alexferreira.sampleapi.domain.authorization.AuthorizationRepository;
 import dev.alexferreira.sampleapi.domain.authorization.TenantAuthorized;
 import dev.alexferreira.sampleapi.domain.authorization.exception.UserNotFoundException;
 import dev.alexferreira.sampleapi.domain.tenant.Tenant;
-import dev.alexferreira.sampleapi.domain.tenant.TenantRepository;
+import dev.alexferreira.sampleapi.infrastructure.repository.TenantRepository;
+import dev.alexferreira.sampleapi.infrastructure.repository.mongo.AuthorizationRepository;
 import dev.alexferreira.sampleapi.usecase.input.CreateAuthorizationInput;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
